@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/*Estilos para los títulos de las tarjetas*/
+.card {
+  font-family: 'Poppins';
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+
+/*Texto dashboard*/
+.text__dashboard {
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-style: normal;
+  font-size: 3.9rem;
+  font-weight: 900;
+  text-shadow: 2px 2px 4px #757575;
+  text-transform: uppercase;
+  text-decoration: #007bff;
+}
+
+.text__dashboard:hover {
+  color: #0056b3;
+}
+
+.img__dashboard {
+  width: 720px;
+  height: 720px;
+  margin-top: -65px;
+}
+
+.img__dashboard:hover {
+  color: #fff;
+}
+
+
+/* Fondo general */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+/* Contenedor principal */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: inherit;
+  margin-right: 150px;
+  height: 80vh;
+  width: 50%;
+  margin: 25px;
+  padding: 25px 18px 15px 15px;
+  font-family: "Poppins", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Panel izquierdo */
+.left-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  align-items: center;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  color: white;
+}
+
+.logo-form {
+  text-align: center;
+}
+
+.logo-form img {
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+
+/* Panel derecho */
+.right-panel {
+  flex: 1;
+  background: #fff;
+  padding: 40px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulario */
+.login-form h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #007bff;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+
+/*Contenedor de prestamo*/
+.button__prestamo {
+  display: flex;
+  margin-top: 25px;
+  margin-bottom: 5px;
+  justify-content: flex-start;
+  align-items: start;
+}
+
+.h2 {
+  align-self: start;
+}
+
+
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(63, 99, 128, 0.8);
+  border: none;
+}
+
+.form-select:focus {
+  font-family: 'Poppins';
+  border: none;
+  box-shadow: 0 0 0 0.2rem rgba(63, 99, 128, 0.8);
+}
+
+/* Estilos para los checkboxes */
+#cualMotivo {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 5px;
+  margin-top: 1px;
+  font-family: 'Poppins';
+  margin-right: 19px;
+}
+
+
+.form-check__otro {
+  display: flex;
+  align-items: center;
+}
+
+.form-check__otro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/*Estilo para las alertas*/
+.alert {
+  font-family: 'Poppins';
+  color: black;
+  font-weight: 400;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Estilos para los checkboxes */
+.form-check-label {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 5px;
+  margin-top: 1px;
+  font-family: 'Poppins';
+  margin-right: 19px;
+}
+
+/*Estilos para los checkboxes de servicios*/
+.form-check__servicio {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 15px;
+  margin-top: 5px;
+}
+
+.container__listaSolicitudes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-inline-start: 120px;
+  margin-inline-end: 100px;
+}
+
+/*Contenedor principal*/
+.container {
+  font-family: 'Poppins';
+  max-width: max-content;
+}
+
+/* Botón para agregar material */
+#agregarMaterial {
+  margin-top: 29px;
+  margin-bottom: 32px;
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-size: 0.9rem;
+  background-color: #3F6380;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+#agregarMaterial:hover {
+  background-color: #7275a0;
+  cursor: pointer;
+}
+
+/*Boton para agregar categoria*/
+#agregarCategoria {
+  margin-top: 29px;
+  margin-bottom: 32px;
+  font-family: 'Poppins';
+  font-weight: 500;
+  font-size: 0.9rem;
+  background-color: #3F6380;
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 4px;
+  margin-right: 15px;
+}
