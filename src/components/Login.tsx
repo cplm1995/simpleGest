@@ -80,8 +80,8 @@ const Login = () => {
                             <div className="form-group">
                                 <FaUser style={{
                                     position: "absolute",
-                                    top: '1px',
-                                    left: '150px',
+                                    left: '690px',
+                                    top: '270px',
                                     fontSize: '25px',
                                     transform: "translateY(-10%)",
                                     margin: '10px',
@@ -102,8 +102,8 @@ const Login = () => {
                             <div className="form-group">
                                 <FaLock style={{
                                     position: "absolute",
-                                    top: '1px',
-                                    left: '210px',
+                                    right: '617px',
+                                    top: '350px',
                                     fontSize: '25px',
                                     transform: "translateY(-10%)",
                                     margin: '10px',
@@ -111,10 +111,10 @@ const Login = () => {
                                 }} />
                                 <input
                                     type="password"
-                                    id="password"
-                                    className="form-control"
-                                    name="password"
-                                    value={form.password}
+                                    id="username"
+                                    className="form-control ps-5"
+                                    name="username"
+                                    value={form.username}
                                     onChange={hanleChangeForm}
                                     placeholder="Ingrese su contraseña"
                                     required
