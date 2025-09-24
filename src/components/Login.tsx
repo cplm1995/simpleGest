@@ -103,7 +103,7 @@ const Login = () => {
                                 <FaLock style={{
                                     position: "absolute",
                                     top: '1px',
-                                    left: '280px',
+                                    left: '210px',
                                     fontSize: '25px',
                                     transform: "translateY(-10%)",
                                     margin: '10px',
