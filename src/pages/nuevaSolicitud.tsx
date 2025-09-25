@@ -108,7 +108,7 @@ const NuevaSolicitud = () => {
                 },
                 body: JSON.stringify(datosFormulario),
             });
-            const data = await response.json();
+            await response.json();
 
             if (!response.ok) throw new Error('Error al guardar los datos');
             toast.success('Datos guardados correctamente');
