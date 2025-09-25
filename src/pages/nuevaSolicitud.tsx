@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
 
 const NuevaSolicitud = () => {
@@ -40,11 +42,13 @@ const NuevaSolicitud = () => {
         };
         setListaMateriales([...listaMateriales, nuevoMaterial]);
         setDatosMateriales({ codigoArticulo: '', material: '', cantidad: 0 });
+        toast.success(`${material} agregado a la lista'`);
     };
 
     const handleEliminarMaterial = (index: number) => {
         const nuevaLista = listaMateriales.filter((_, i) => i !== index);
         setListaMateriales(nuevaLista);
+        toast.error(`eliminado a la lista`);
     };
 
     const [datosSolicitante, setDatosSolicitante] = useState({
@@ -106,11 +110,9 @@ const NuevaSolicitud = () => {
             });
             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error('Error al guardar los datos');
-            }
-            console.log('Datos guardados:', data)
-            alert('Datos guardados correctamente');
+            if (!response.ok) throw new Error('Error al guardar los datos');
+
+            toast.success('Datos guardados correctamente');
 
             //Limpiar campos al guardar
             setDatosSolicitante({
@@ -133,6 +135,7 @@ const NuevaSolicitud = () => {
 
         } catch (error) {
             console.error("Error al guardar los datos:", error);
+            toast.error('Error al guardar los datos');
         }
     };
 
@@ -141,9 +144,8 @@ const NuevaSolicitud = () => {
             <div className="container mt-5 text-center">
                 <div className="card mt-4 text-start sm-6">
                     <div className="card-body">
-                        {/* 👉 Contenido imprimible */}
                         <div className="card-title text-center fw-bold">Solicitud Servicio de Mantenimiento</div>
-                        {/* 🔽 Aquí va TODO tu formulario: inputs, checkboxes, materiales, etc. */}
+                        {/* Aquí va TODO tu formulario: inputs, checkboxes, materiales, etc. */}
                         <form onSubmit={guardarDatosSolicitante}>
                             {/* Datos del solicitante */}
                             <div className="row">
@@ -450,6 +452,7 @@ const NuevaSolicitud = () => {
                     </footer>
                 </div>
             </div>
+            <ToastContainer position="top-right" autoClose={3000} />
         </>
     );
 };

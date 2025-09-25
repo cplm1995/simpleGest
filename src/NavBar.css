@@ -1,9 +1,8 @@
 /*Fondo y borde*/
 .custom-navbar {
     background: linear-gradient(135deg, #007bff, #0056b3);
-    margin-top: auto;
     position: relative;
-    padding: 10px 20px;
+    padding: 10px 2px;
 }
 
 .custom-brand {
@@ -14,6 +13,7 @@
 .custom-link {
     color: #fff;
     transition: color 0.3s ease-in-out;
+    background: #fff;
 }
 
 .custom-link:hover {
@@ -25,9 +25,11 @@
 }
 
 .custom-navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-
-#btn-logout{
-    margin-inline-start: auto;
+.custom-navbar .nav-link {
+    margin-right: 15px;
+    font-weight: 100;
+    display: flex;
+    align-items: center;
 }

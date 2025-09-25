@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { FaLock, FaRightToBracket, FaUser } from "react-icons/fa6";
 
-
 const Login = () => {
     const [form, setForm] = useState({
         username: "",
@@ -12,8 +11,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-
-    //Manejo en los cambios de los input
+    // Manejo en los cambios de los input
     const hanleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         setForm({
@@ -26,7 +24,6 @@ const Login = () => {
         e.preventDefault();
         console.log(form);
 
-        //Llamamos la api para iniciar sesión
         try {
             const response = await fetch('http://localhost:3000/api/auth/login', {
                 method: 'POST',
@@ -44,10 +41,10 @@ const Login = () => {
 
             console.log("Usuario logueado correctamente", data);
 
-            //Guardar el token 
+            // Guardar el token 
             localStorage.setItem('token', data.token);
 
-            //Redirigimo al Dashboard
+            // Redirigimos al Dashboard
             window.location.href = '/dashboard';
         } catch (err) {
             setError((err as Error).message);
@@ -55,9 +52,6 @@ const Login = () => {
             setLoading(false);
         }
     };
-
-
-
 
     return (
         <>
@@ -71,26 +65,23 @@ const Login = () => {
                             </div>
                         </div>
                     </div>
+
                     {/* Panel Derecho */}
                     <div className="right-panel col-sm-6 text-center">
                         <form className="login-form d-flex flex-column justify-content-center" onSubmit={hanleSubmitForm}>
                             <h2>Iniciar sesión</h2>
 
                             {error && <div className="alert alert-danger">{error}</div>}
-                            <div className="form-group">
-                                <FaUser style={{
-                                    position: "absolute",
-                                    left: '690px',
-                                    top: '270px',
-                                    fontSize: '25px',
-                                    transform: "translateY(-10%)",
-                                    margin: '10px',
-                                    color: '#3267f8ff'
-                                }} />
+
+                            {/* Usuario */}
+                            <div className="input-group mb-3">
+                                <span className="input-group-text bg-white">
+                                    <FaUser className="text-primary" />
+                                </span>
                                 <input
                                     type="text"
                                     id="username"
-                                    className="form-control ps-5"
+                                    className="form-control"
                                     name="username"
                                     value={form.username}
                                     onChange={hanleChangeForm}
@@ -99,30 +90,25 @@ const Login = () => {
                                 />
                             </div>
 
-                            <div className="form-group">
-                                <FaLock style={{
-                                    position: "absolute",
-                                    right: '617px',
-                                    top: '350px',
-                                    fontSize: '25px',
-                                    transform: "translateY(-10%)",
-                                    margin: '10px',
-                                    color: '#3267f8ff'
-                                }} />
+                            {/* Contraseña */}
+                            <div className="input-group mb-3">
+                                <span className="input-group-text bg-white">
+                                    <FaLock className="text-primary" />
+                                </span>
                                 <input
                                     type="password"
-                                    id="username"
-                                    className="form-control ps-5"
-                                    name="username"
-                                    value={form.username}
+                                    id="password"
+                                    className="form-control"
+                                    name="password"
+                                    value={form.password}
                                     onChange={hanleChangeForm}
                                     placeholder="Ingrese su contraseña"
                                     required
                                 />
                             </div>
 
-                            <button type="submit" className="btn btn-primary mt-3" disabled={loading}>
-                                <FaRightToBracket style={{ marginRight: 5 }} />
+                            <button type="submit" className="btn btn-outline-primary mt-3" id="login-btn" disabled={loading}>
+                                <FaRightToBracket className="me-2" />
                                 {loading ? 'Cargando...' : 'Entrar'}
                             </button>
                         </form>

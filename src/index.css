@@ -8,30 +8,14 @@
   margin-bottom: 25px;
 }
 
-/*Texto dashboard*/
-.text__dashboard {
-  font-family: "Poppins";
-  font-weight: 500;
-  font-style: normal;
-  font-size: 3.9rem;
-  font-weight: 900;
-  text-shadow: 2px 2px 4px #757575;
-  text-transform: uppercase;
-  text-decoration: #007bff;
-}
 
-.text__dashboard:hover {
-  color: #0056b3;
-}
-
-.img__dashboard {
-  width: 720px;
-  height: 720px;
-  margin-top: -65px;
-}
-
-.img__dashboard:hover {
-  color: #fff;
+.img-fluid {
+  max-width: 55%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -50px;
 }
 
 /* Fondo general */
@@ -75,6 +59,35 @@
 .logo-form img {
   border-radius: 50%;
   margin-bottom: 10px;
+}
+
+/*Boton de cerrar*/
+#logoutButton{
+  border: none;
+  background: none;
+  color: white;
+  position: relative;
+}
+
+#logoutButton:hover{
+  border:#ddd;
+  background:#fff;
+  color: rgb(255, 0, 0);
+  position: relative;
+}
+
+/*Boton de ingresar*/
+#login-btn{
+  border: none;
+  background:#104175;
+  color: white;
+  position: relative;
+}
+#login-btn:hover{
+  border:none;
+  background:#007bff;
+  color: white;
+  position: relative;
 }
 
 /* Panel derecho */

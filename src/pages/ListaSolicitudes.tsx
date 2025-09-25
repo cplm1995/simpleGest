@@ -125,8 +125,8 @@ const ListaSolicitudes = () => {
       </div>
 
       {/* 📋 Tabla */}
-      <table className="table table-striped table-bordered text-center">
-        <thead className="table-dark">
+      <table className="table table-striped table-bordered table-responsive">
+        <thead className="table-dark text-center">
           <tr>
             <th>Código Artículo</th>
             <th>Material</th>
