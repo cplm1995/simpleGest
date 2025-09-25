@@ -111,7 +111,6 @@ const NuevaSolicitud = () => {
             const data = await response.json();
 
             if (!response.ok) throw new Error('Error al guardar los datos');
-
             toast.success('Datos guardados correctamente');
 
             //Limpiar campos al guardar
