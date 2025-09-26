@@ -48,7 +48,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
           <div className="col-md-4 mb-3">
             <div className="card shadow-sm">
               <div className="card-body">
@@ -59,9 +58,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <img src="../src/assets/img/logo1.png" className="img-fluid text-muted mt-1" alt="" />
-
+        <img src="../src/assets/img/logo1.png" className="img-fluid text-muted mt-0" alt="" />
       </div>
     </>
   );

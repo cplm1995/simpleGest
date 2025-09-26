@@ -95,10 +95,8 @@ const Usuarios = () => {
           <div className="card-body">
             <div className="card-header">Ingreso nuevo usuario</div>
             <form onSubmit={handleGuardarClick} className="mt-4">
-              <div className="mb-3 mt-4">
-                <label htmlFor="nombre" className="form-label">
-                  <FaUserPen style={{ marginRight: "5px", marginTop: -3 }} /> Nombre completo
-                </label>
+              <div className="input-group-text bg-white mb-3 mt-4">
+                  <FaUserPen style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue"}} />
                 <input
                   value={formData.nombrecompleto}
                   onChange={handleChange}
@@ -110,10 +108,8 @@ const Usuarios = () => {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="username" className="form-label">
-                  <FaUserPlus style={{ marginRight: "5px", marginTop: -3 }} /> Username
-                </label>
+              <div className="input-group-text bg-white mb-3">
+                  <FaUserPlus style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue"}} />
                 <input
                   value={formData.username}
                   onChange={handleChange}
@@ -125,10 +121,8 @@ const Usuarios = () => {
                   required
                 />
               </div>
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">
-                  <FaLock style={{ marginRight: "5px", marginTop: -3 }} /> Contraseña
-                </label>
+              <div className="input-group-text bg-white mb-3">
+                  <FaLock style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue"}} />
                 <input
                   value={formData.password}
                   onChange={handleChange}
@@ -140,7 +134,7 @@ const Usuarios = () => {
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" id="btnUsers">
                 <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> Guardar
               </button>
             </form>

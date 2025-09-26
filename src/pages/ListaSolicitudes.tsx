@@ -112,8 +112,7 @@ const ListaSolicitudes = () => {
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Lista de Solicitudes</h1>
-
-      {/* 🔍 Buscador */}
+      {/*Buscador */}
       <div className="mb-3 mt-5">
         <input
           type="text"
@@ -124,7 +123,7 @@ const ListaSolicitudes = () => {
         />
       </div>
 
-      {/* 📋 Tabla */}
+      {/*Tabla */}
       <table className="table table-striped table-bordered table-responsive">
         <thead className="table-dark text-center">
           <tr>
@@ -163,10 +162,9 @@ const ListaSolicitudes = () => {
           )}
         </tbody>
       </table>
-
-      {/* 📌 Paginación */}
+      {/*Paginación */}
       <nav>
-        <ul className="pagination justify-content-center">
+        <ul className="pagination justify-content-start">
           <li className={`page-item ${paginaActual === 1 ? "disabled" : ""}`}>
             <button className="page-link" onClick={() => setPaginaActual(paginaActual - 1)}>
               Anterior
@@ -180,7 +178,6 @@ const ListaSolicitudes = () => {
               </button>
             </li>
           ))}
-
           <li className={`page-item ${paginaActual === totalPaginas ? "disabled" : ""}`}>
             <button className="page-link" onClick={() => setPaginaActual(paginaActual + 1)}>
               Siguiente

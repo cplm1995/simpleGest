@@ -431,8 +431,6 @@ const NuevaSolicitud = () => {
                                     ))}
                                 </tbody>
                             </table>
-
-                            <br />
                             <br />
                             <div className="botones d-grid gap-2 d-md-flex justify-content-md-end no-print">
                                 <button type="submit" className="btn btn-primary">Registrar</button>
@@ -445,10 +443,6 @@ const NuevaSolicitud = () => {
                             </div>
                         </form>
                     </div>
-                    <footer className="mt-3">
-                        <hr />
-                        <p className="text-center">&copy; 2024 Empresa. Todos los derechos reservados.</p>
-                    </footer>
                 </div>
             </div>
             <ToastContainer position="top-right" autoClose={3000} />
