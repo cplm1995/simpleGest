@@ -149,19 +149,19 @@ const NuevaSolicitud = () => {
                             {/* Datos del solicitante */}
                             <div className="row">
                                 <div className="col-sm-4">
-                                    <label htmlFor="areaSolicitante" className="form-label">Aréa o centro solicitante</label>
+                                    <label htmlFor="areaSolicitante" className="form-label">Aréa o centro solicitante <span className="text-danger">*</span></label>
                                     <input type="text" className="form-control mb-1" id="areaSolicitante" name="areaSolicitante" placeholder="Centro solicitante"
                                         value={datosSolicitante.areaSolicitante} onChange={datosSolicitanteChange}
                                     />
                                 </div>
                                 <div className="col-sm-4">
-                                    <label htmlFor="fechaSolicitud" className="form-label">Fecha de Solicitud</label>
+                                    <label htmlFor="fechaSolicitud" className="form-label">Fecha de Solicitud <span className="text-danger">*</span></label>
                                     <input type="date" className="form-control mb-1" id="fechaSolicitud" name="fechaSolicitud"
                                         value={datosSolicitante.fechaSolicitud} onChange={datosSolicitanteChange}
                                     />
                                 </div>
                                 <div className="col-sm-4">
-                                    <label htmlFor="torre" className="form-label">Torre</label>
+                                    <label htmlFor="torre" className="form-label">Torre <span className="text-danger">*</span></label>
                                     <input type="text" className="form-control mb-1" id="torre" name="torre" placeholder="Ingrese número de torre"
                                         value={datosSolicitante.torre} onChange={datosSolicitanteChange}
                                     />
@@ -169,13 +169,13 @@ const NuevaSolicitud = () => {
                             </div>
                             <div className="row mt-3">
                                 <div className="col-sm-4">
-                                    <label htmlFor="nombreSolicitante" className="form-label">Nombre solicitante</label>
+                                    <label htmlFor="nombreSolicitante" className="form-label">Nombre solicitante <span className="text-danger">*</span></label>
                                     <input type="text" className="form-control mb-1" id="nombreSolicitante" name="nombreSolicitante" placeholder="Nombre solicitante"
                                         value={datosSolicitante.nombreSolicitante} onChange={datosSolicitanteChange}
                                     />
                                 </div>
                                 <div className="col-sm-4">
-                                    <label htmlFor="piso" className="form-label">Piso</label>
+                                    <label htmlFor="piso" className="form-label">Piso <span className="text-danger">*</span></label>
                                     <input type="text" className="form-control mb-1" id="piso" name="piso" placeholder="Nombre"
                                         value={datosSolicitante.piso} onChange={datosSolicitanteChange}
                                     />
@@ -326,7 +326,7 @@ const NuevaSolicitud = () => {
                             </div>
                             {/* Descripción del problema */}
                             <div className="form-group">
-                                <label htmlFor="descripcionProblema" className="form-label">Descripción</label>
+                                <label htmlFor="descripcionProblema" className="form-label">Descripción <span className="text-danger">*</span></label>
                                 <textarea className="form-control" id="descripcionProblema" name="descripcionProblema" value={serviciosSolicitados.descripcionProblema}
                                     onChange={(e) =>
                                         setServiciosSolicitados({
@@ -343,7 +343,7 @@ const NuevaSolicitud = () => {
                             <div className="row">
                                 <div className="form-group col-sm-6">
                                     <label htmlFor="materialH" className="form-label">
-                                        Material
+                                        Material <span className="text-danger">*</span>
                                     </label>
                                     <Select
                                         id="materialH"
@@ -375,7 +375,7 @@ const NuevaSolicitud = () => {
                                 {/* Cantidad */}
                                 <div className="form-group col-sm-3">
                                     <label htmlFor="cantidad" className="form-label">
-                                        Cantidad
+                                        Cantidad <span className="text-danger">*</span>
                                     </label>
                                     <input
                                         type="number"
