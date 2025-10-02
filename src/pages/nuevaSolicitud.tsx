@@ -180,6 +180,7 @@ const NuevaSolicitud = () => {
                     type="text"
                     className="form-control mb-1"
                     id="areaSolicitante"
+                    required
                     name="areaSolicitante"
                     placeholder="Centro solicitante"
                     value={datosSolicitante.areaSolicitante}
@@ -193,6 +194,7 @@ const NuevaSolicitud = () => {
                   <input
                     type="date"
                     className="form-control mb-1"
+                    required
                     id="fechaSolicitud"
                     name="fechaSolicitud"
                     value={datosSolicitante.fechaSolicitud}
@@ -205,6 +207,7 @@ const NuevaSolicitud = () => {
                   </label>
                   <input
                     type="text"
+                    required
                     className="form-control mb-1"
                     id="torre"
                     name="torre"
@@ -221,6 +224,7 @@ const NuevaSolicitud = () => {
                   </label>
                   <input
                     type="text"
+                    required
                     className="form-control mb-1"
                     id="nombreSolicitante"
                     name="nombreSolicitante"
@@ -237,6 +241,7 @@ const NuevaSolicitud = () => {
                     type="text"
                     className="form-control mb-1"
                     id="piso"
+                    required
                     name="piso"
                     placeholder="Nombre"
                     value={datosSolicitante.piso}
