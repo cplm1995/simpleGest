@@ -5,7 +5,7 @@ import Select from "react-select";
 
 const NuevaSolicitud = () => {
   const [articulosDB, setArticulosDB] = useState<
-    { _id: string; nombreArticulo: string }[]
+    { _id: string; nombreArticulo: string; stock: number }[]
   >([]);
   const [listaMateriales, setListaMateriales] = useState<
     { codigoArticulo: string; material: string; cantidad: number }[]
@@ -17,7 +17,7 @@ const NuevaSolicitud = () => {
     cantidad: 0,
   });
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchArticulos = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/articulos");
@@ -33,6 +33,18 @@ const NuevaSolicitud = () => {
   const handleAgregarMaterial = () => {
     const { codigoArticulo, material, cantidad } = datosMateriales;
     if (!codigoArticulo || !cantidad) return;
+
+    const articuloDB = articulosDB.find((a) => a._id === codigoArticulo);
+    if (!articuloDB) {
+      toast.error("Material no encontrado");
+      return;
+    }
+
+    if(cantidad > articuloDB.stock){
+      toast.error(`No hay suficiente stock para ${material}. Disponible: ${articuloDB.stock}`);
+      return;
+    }
+
     const nuevoMaterial = {
       codigoArticulo,
       material,

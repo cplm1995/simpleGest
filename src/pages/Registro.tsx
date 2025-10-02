@@ -113,7 +113,7 @@ const Registro = () => {
     }
   };
 
-  // ✏️ Editar (cargar datos al formulario)
+  //Editar (cargar datos al formulario)
   const handleEditar = (articulo: Articulo) => {
     setDatosRegistro({
       tipoRegistro: articulo.tipoRegistro,
@@ -171,7 +171,7 @@ const Registro = () => {
   return (
     <><div className="container mt-5">
       <h1>Registro</h1>
-      {/* 📌 Formulario */}
+      {/*Formulario */}
       <form onSubmit={handleGuardarDatos}>
         <div className="card">
           <div className="card-body">
@@ -259,7 +259,7 @@ const Registro = () => {
         </div>
       </form>
 
-      {/* 🔍 Buscador */}
+      {/* Buscador */}
       <div className="mt-4">
         <input
           type="text"
@@ -314,7 +314,7 @@ const Registro = () => {
         </tbody>
       </table>
 
-      {/* 📌 Paginación */}
+      {/* Paginación */}
       <nav>
         <ul className="pagination justify-content-start">
           <li className={`page-item ${paginaActual === 1 ? "disabled" : ""}`}>
@@ -352,13 +352,8 @@ const Registro = () => {
           </li>
         </ul>
       </nav>
-
-      <footer>
-        <p className="text-center mt-5">
-          &copy; 2024 SimpleGest. Todos los derechos reservados.
-        </p>
-      </footer>
-    </div><ToastContainer position="top-right" autoClose={3000} /></>
+    </div>
+    <ToastContainer position="top-right" autoClose={3000} /></>
   );
 };
 
