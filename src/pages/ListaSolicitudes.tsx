@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { FaTrashAlt } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // ---------------------------
 // Tipos de datos
@@ -37,9 +40,53 @@ const ListaSolicitudes = () => {
   const [servicios, setServicios] = useState<Servicio[]>([]);
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
-  const filasPorPagina = 5;
+  const filasPorPagina = 10;
 
-  // 🔎 Filtrar resultados
+  // ---------------------------
+  // Función eliminar
+  // ---------------------------
+  const handleEliminar = (id: string) => {
+    toast.info(
+      <div>
+        <p>¿Seguro que quieres eliminar esta solicitud?</p>
+        <div className="d-flex justify-content-end mt-2">
+          <button
+            className="btn btn-sm btn-danger me-2"
+            onClick={async () => {
+              try {
+                const response = await fetch(
+                  `http://localhost:3000/api/solicitudes/${id}`,
+                  { method: "DELETE" }
+                );
+
+                if (!response.ok) throw new Error("Error al eliminar");
+
+                setServicios((prev) => prev.filter((s) => s._id !== id));
+                toast.dismiss();
+                toast.warning("Solicitud eliminada correctamente");
+              } catch (error) {
+                console.error(error);
+                toast.error("Error al eliminar solicitud");
+              }
+            }}
+          >
+            Sí, eliminar
+          </button>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={() => toast.dismiss()}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
+  };
+
+  // ---------------------------
+  // Filtrar resultados
+  // ---------------------------
   const filtrados = servicios.flatMap((servicio) =>
     servicio.materiales
       .filter((material) => {
@@ -60,18 +107,21 @@ const ListaSolicitudes = () => {
       }))
   );
 
-  // 📌 Paginación con base en resultados filtrados
+  // ---------------------------
+  // Paginación
+  // ---------------------------
   const indiceUltimaFila = paginaActual * filasPorPagina;
   const indicePrimeraFila = indiceUltimaFila - filasPorPagina;
   const filasActuales = filtrados.slice(indicePrimeraFila, indiceUltimaFila);
   const totalPaginas = Math.ceil(filtrados.length / filasPorPagina);
 
-  // Reiniciar a página 1 cuando cambie la búsqueda
   useEffect(() => {
     setPaginaActual(1);
   }, [busqueda]);
 
-  // 📌 Obtener datos del backend
+  // ---------------------------
+  // Obtener datos del backend
+  // ---------------------------
   useEffect(() => {
     const fetchServicios = async () => {
       try {
@@ -79,7 +129,6 @@ const ListaSolicitudes = () => {
         const data = await response.json();
         const raw = data?.docs ?? [];
 
-        // Normalización de datos
         const normalized = raw.map((s: any) => {
           const materiales: Material[] = (s.materiales || []).map((m: any) => ({
             codigoArticulo: m.codigoArticulo || null,
@@ -109,11 +158,15 @@ const ListaSolicitudes = () => {
     fetchServicios();
   }, []);
 
+  // ---------------------------
+  // Render
+  // ---------------------------
   return (
     <div className="container mt-5">
       <h1 className="text-center mb-4">Lista de Solicitudes</h1>
-      {/*Buscador */}
-      <div className="mb-3 mt-5">
+
+      {/* Buscador */}
+      <div className="mb-3">
         <input
           type="text"
           className="form-control"
@@ -123,7 +176,7 @@ const ListaSolicitudes = () => {
         />
       </div>
 
-      {/*Tabla */}
+      {/* Tabla */}
       <table className="table table-striped table-bordered table-responsive">
         <thead className="table-dark text-center">
           <tr>
@@ -135,56 +188,102 @@ const ListaSolicitudes = () => {
             <th>Servicios</th>
             <th>Descripción</th>
             <th>Fecha</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {filasActuales.length === 0 ? (
             <tr>
-              <td colSpan={8} className="text-center">
+              <td colSpan={9} className="text-center">
                 No hay solicitudes que coincidan
               </td>
             </tr>
           ) : (
             filasActuales.map(
-              ({ material, solicitante, servicios, descripcionProblema, fechaSolicitud, key }) => (
+              ({
+                _id,
+                material,
+                solicitante,
+                servicios,
+                descripcionProblema,
+                fechaSolicitud,
+                key,
+              }) => (
                 <tr key={key}>
-                  <td>{material.codigoArticulo ? material.codigoArticulo.codigoArticulo : "N/A"}</td>
+                  <td>
+                    {material.codigoArticulo
+                      ? material.codigoArticulo.codigoArticulo
+                      : "N/A"}
+                  </td>
                   <td>{material.nombreArticulo}</td>
                   <td>{material.cantidad}</td>
                   <td>{solicitante?.nombreSolicitante}</td>
                   <td>{solicitante?.areaSolicitante}</td>
                   <td>{(servicios || []).join(", ")}</td>
                   <td>{descripcionProblema}</td>
-                  <td>{fechaSolicitud ? new Date(fechaSolicitud).toLocaleDateString() : "N/A"}</td>
+                  <td>
+                    {fechaSolicitud
+                      ? new Date(fechaSolicitud).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td className="text-center">
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleEliminar(_id)}
+                    >
+                     <FaTrashAlt style={{ marginRight: "1px", marginTop: -3 }} />
+                    </button>
+                  </td>
                 </tr>
               )
             )
           )}
         </tbody>
       </table>
-      {/*Paginación */}
+
+      {/* Paginación */}
       <nav>
         <ul className="pagination justify-content-start">
           <li className={`page-item ${paginaActual === 1 ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => setPaginaActual(paginaActual - 1)}>
+            <button
+              className="page-link"
+              onClick={() => setPaginaActual(paginaActual - 1)}
+            >
               Anterior
             </button>
           </li>
 
           {[...Array(totalPaginas)].map((_, i) => (
-            <li key={i} className={`page-item ${paginaActual === i + 1 ? "active" : ""}`}>
-              <button className="page-link" onClick={() => setPaginaActual(i + 1)}>
+            <li
+              key={i}
+              className={`page-item ${
+                paginaActual === i + 1 ? "active" : ""
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => setPaginaActual(i + 1)}
+              >
                 {i + 1}
               </button>
             </li>
           ))}
-          <li className={`page-item ${paginaActual === totalPaginas ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => setPaginaActual(paginaActual + 1)}>
+          <li
+            className={`page-item ${
+              paginaActual === totalPaginas ? "disabled" : ""
+            }`}
+          >
+            <button
+              className="page-link"
+              onClick={() => setPaginaActual(paginaActual + 1)}
+            >
               Siguiente
             </button>
           </li>
         </ul>
       </nav>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

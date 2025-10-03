@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
+import { FaRegFloppyDisk, FaXmark } from "react-icons/fa6";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const NuevaSolicitud = () => {
   const [articulosDB, setArticulosDB] = useState<
@@ -16,6 +19,12 @@ const NuevaSolicitud = () => {
     material: "",
     cantidad: 0,
   });
+
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/dashboard"); // redirige al Dashboard
+  };
 
   useEffect(() => {
     const fetchArticulos = async () => {
@@ -52,7 +61,7 @@ const NuevaSolicitud = () => {
     };
     setListaMateriales([...listaMateriales, nuevoMaterial]);
     setDatosMateriales({ codigoArticulo: "", material: "", cantidad: 0 });
-    toast.success(`${material} agregado a la lista'`);
+    toast.success(`${material} agregado a la lista`);
   };
 
   const handleEliminarMaterial = (index: number) => {
@@ -557,6 +566,7 @@ const NuevaSolicitud = () => {
                 </label>
                 <textarea
                   className="form-control"
+                  required
                   id="descripcionProblema"
                   name="descripcionProblema"
                   value={serviciosSolicitados.descripcionProblema}
@@ -631,11 +641,12 @@ const NuevaSolicitud = () => {
                 {/* Botón guardar */}
                 <div className="form-group col-sm-3 d-flex align-items-end">
                   <button
+                  id="btnGeneral"
                     type="button"
                     className="btn btn-primary w-100"
                     onClick={handleAgregarMaterial}
                   >
-                    Agregar
+                    <FaPlusCircle style={{ marginRight: "5px", marginTop: -3 }} /> Agregar
                   </button>
                 </div>
               </div>
@@ -660,7 +671,7 @@ const NuevaSolicitud = () => {
                           className="btn btn-danger btn-sm"
                           onClick={() => handleEliminarMaterial(index)}
                         >
-                          Eliminar
+                         <FaTrashAlt style={{ marginRight: "1px", marginTop: -3 }} />
                         </button>
                       </td>
                     </tr>
@@ -669,11 +680,11 @@ const NuevaSolicitud = () => {
               </table>
               <br />
               <div className="botones d-grid gap-2 d-md-flex justify-content-md-end no-print">
-                <button type="submit" className="btn btn-primary">
-                  Registrar
+                <button type="submit" id="btnGeneral" className="btn btn-primary">
+                   <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} />Registrar
                 </button>
-                <button type="button" className="btn btn-secondary">
-                  Cancelar
+                <button type="button" id="btnGeneralCancelar" className="btn btn-secondary" onClick={handleCancel}>
+                  <FaXmark style={{ marginRight: "5px", marginTop: -3 }} />Cancelar
                 </button>
               </div>
 

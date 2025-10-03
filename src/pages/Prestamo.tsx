@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FaRegFloppyDisk } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -249,9 +250,10 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                   <div className="col-sm-12 text-end">
                     <button
                       type="submit"
+                      id="btnGeneral"
                       className="btn btn-md btn-outline-primary"
                     >
-                      Guardar
+                     <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> Guardar
                     </button>
                   </div>
                 </div>
@@ -271,7 +273,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
         />
 
         <table className="table table-striped table-responsive shadow-sm">
-          <thead>
+          <thead className="table-dark text-center">
             <tr>
               <th>Código</th>
               <th>Fecha de préstamo</th>
@@ -335,9 +337,6 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-      <footer className="text-center mt-5 mb-3">
-        &copy; {new Date().getFullYear()} Mi Aplicación de Préstamos
-      </footer>
     </>
   );
 };
