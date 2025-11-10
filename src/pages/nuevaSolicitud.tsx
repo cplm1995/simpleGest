@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
+import { FaRegFloppyDisk, FaXmark } from "react-icons/fa6";
+import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const NuevaSolicitud = () => {
   const [articulosDB, setArticulosDB] = useState<
-    { _id: string; nombreArticulo: string; stock: number }[]
+    { _id: string; nombreArticulo: string; descripcion?: string; stock: number }[]
   >([]);
   const [listaMateriales, setListaMateriales] = useState<
     { codigoArticulo: string; material: string; cantidad: number }[]
@@ -17,10 +20,18 @@ const NuevaSolicitud = () => {
     cantidad: 0,
   });
 
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/dashboard"); // redirige al Dashboard
+  };
+
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/articulos");
+        const response = await fetch(
+          "http://simplegest.com:3000/api/articulos"
+        );
         const data = await response.json();
         setArticulosDB(data);
       } catch (error) {
@@ -52,7 +63,7 @@ const NuevaSolicitud = () => {
     };
     setListaMateriales([...listaMateriales, nuevoMaterial]);
     setDatosMateriales({ codigoArticulo: "", material: "", cantidad: 0 });
-    toast.success(`${material} agregado a la lista'`);
+    toast.success(`${material} agregado a la lista`);
   };
 
   const handleEliminarMaterial = (index: number) => {
@@ -123,7 +134,7 @@ const NuevaSolicitud = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/solicitudes", {
+      const response = await fetch("http://simplegest.com:3000/api/solicitudes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -557,6 +568,7 @@ const NuevaSolicitud = () => {
                 </label>
                 <textarea
                   className="form-control"
+                  required
                   id="descripcionProblema"
                   name="descripcionProblema"
                   value={serviciosSolicitados.descripcionProblema}
@@ -584,12 +596,24 @@ const NuevaSolicitud = () => {
                     options={articulosDB.map((articulo) => ({
                       value: articulo._id,
                       label: articulo.nombreArticulo,
+                      descripcion: articulo.descripcion,
                     }))}
+                     formatOptionLabel={(option: any) => (
+                      <div>
+                        <div style={{ fontWeight: "bold" }}>{option.label}</div>
+                        <div style={{ fontSize: "12px", color: "#666" }}>
+                          {option.descripcion || "Sin descripción"}
+                        </div>
+                      </div>
+                    )}
                     value={
                       datosMateriales.codigoArticulo
                         ? {
                             value: datosMateriales.codigoArticulo,
                             label: datosMateriales.material,
+                            descripcion: articulosDB.find(
+                              (a) => a._id === datosMateriales.codigoArticulo
+                            )?.descripcion,
                           }
                         : null
                     }
@@ -631,11 +655,12 @@ const NuevaSolicitud = () => {
                 {/* Botón guardar */}
                 <div className="form-group col-sm-3 d-flex align-items-end">
                   <button
+                  id="btnGeneral"
                     type="button"
                     className="btn btn-primary w-100"
                     onClick={handleAgregarMaterial}
                   >
-                    Agregar
+                    <FaPlusCircle style={{ marginRight: "5px", marginTop: -3 }} /> Agregar
                   </button>
                 </div>
               </div>
@@ -660,7 +685,7 @@ const NuevaSolicitud = () => {
                           className="btn btn-danger btn-sm"
                           onClick={() => handleEliminarMaterial(index)}
                         >
-                          Eliminar
+                         <FaTrashAlt style={{ marginRight: "1px", marginTop: -3 }} />
                         </button>
                       </td>
                     </tr>
@@ -669,11 +694,11 @@ const NuevaSolicitud = () => {
               </table>
               <br />
               <div className="botones d-grid gap-2 d-md-flex justify-content-md-end no-print">
-                <button type="submit" className="btn btn-primary">
-                  Registrar
+                <button type="submit" id="btnGeneral" className="btn btn-primary">
+                   <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} />Registrar
                 </button>
-                <button type="button" className="btn btn-secondary">
-                  Cancelar
+                <button type="button" id="btnGeneralCancelar" className="btn btn-secondary" onClick={handleCancel}>
+                  <FaXmark style={{ marginRight: "5px", marginTop: -3 }} />Cancelar
                 </button>
               </div>
 

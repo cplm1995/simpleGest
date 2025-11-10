@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FaRegFloppyDisk } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -9,7 +10,7 @@ interface PrestamoItem {
   fechaDevolucion: string;
   cantidad: number;
   nombre: string;
-  entregado: "Sí" | "No";
+  entregado: "Si" | "No";
   articulo: string;
 }
 
@@ -38,7 +39,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
   // Cargar préstamos
   const fetchPrestamos = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/prestamos");
+      const res = await fetch("http://simplegest.com:3000/api/prestamos");
       if (!res.ok) throw new Error("Error al cargar");
       const data = await res.json();
       const ordenados = data.docs ? data.docs.reverse() : data.reverse();
@@ -72,7 +73,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
   ) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/api/prestamos", {
+      const response = await fetch("http://simplegest.com:3000/api/prestamos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(prestamo),
@@ -115,9 +116,9 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
 
     const actualizado: PrestamoItem = {
       ...prestamoActual,
-      entregado: prestamoActual.entregado === "Sí" ? "No" : "Sí",
+      entregado: prestamoActual.entregado === "Si" ? "No" : "Si",
       fechaDevolucion:
-        prestamoActual.entregado === "Sí"
+        prestamoActual.entregado === "Si"
           ? ""
           : new Date().toLocaleDateString("es-CO"),
     };
@@ -127,7 +128,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
     );
 
     try {
-      await fetch(`http://localhost:3000/api/prestamos/${id}`, {
+      await fetch(`http://simplegest.com:3000/api/prestamos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -249,9 +250,10 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                   <div className="col-sm-12 text-end">
                     <button
                       type="submit"
+                      id="btnGeneral"
                       className="btn btn-md btn-outline-primary"
                     >
-                      Guardar
+                     <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> Guardar
                     </button>
                   </div>
                 </div>
@@ -271,8 +273,9 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
         />
 
         <table className="table table-striped table-responsive shadow-sm">
-          <thead>
+          <thead className="table-dark text-center">
             <tr>
+              <th>#</th>
               <th>Código</th>
               <th>Fecha de préstamo</th>
               <th>Artículo</th>
@@ -291,6 +294,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
             ) : (
               filasActuales.map((p) => (
                 <tr key={p._id}>
+                  <td>{1 + filtrados.indexOf(p)}</td>
                   <td>{p.codigoPrestamo}</td>
                   <td>{new Date(p.fechaPrestamo).toLocaleDateString()}</td>
                   <td>{p.articulo}</td>
@@ -301,8 +305,8 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                   <td>
                     <input
                       type="checkbox"
-                      disabled={p.entregado === "Sí"}
-                      checked={p.entregado === "Sí"}
+                      disabled={p.entregado === "Si"}
+                      checked={p.entregado === "Si"}
                       onChange={() => handleCheckboxChange(p._id)}
                     />
                   </td>
@@ -335,9 +339,6 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
-      <footer className="text-center mt-5 mb-3">
-        &copy; {new Date().getFullYear()} Mi Aplicación de Préstamos
-      </footer>
     </>
   );
 };

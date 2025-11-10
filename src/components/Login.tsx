@@ -1,122 +1,160 @@
 "use client";
 
-import { useState } from "react"
+import { useEffect, useState } from "react";
 import { FaLock, FaRightToBracket, FaUser } from "react-icons/fa6";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
-    const [form, setForm] = useState({
-        username: "",
-        password: ''
+  const [form, setForm] = useState({
+    username: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  // 🧩 Manejar cambios en los inputs
+  const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
     });
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+  };
 
-    // Manejo en los cambios de los input
-    const hanleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    }
-
-    const hanleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(form);
-
-        try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(form)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Error desconocido');
-            }
-
-            console.log("Usuario logueado correctamente", data);
-
-            // Guardar el token 
-            localStorage.setItem('token', data.token);
-
-            // Redirigimos al Dashboard
-            window.location.href = '/dashboard';
-        } catch (err) {
-            setError((err as Error).message);
-        } finally {
-            setLoading(false);
-        }
+  // Quitar scroll solo en la pantalla de login
+  useEffect(() => {
+    document.body.classList.add("login-page");
+    return () => {
+      document.body.classList.remove("login-page");
     };
+  }, []);
 
-    return (
-        <>
-            <div className="wrapper">
-                <div className="login-container">
-                    {/* Panel Izquierdo */}
-                    <div className="left-panel">
-                        <div className="logo">
-                            <div className="logo-form">
-                                <img src="../src/assets/img/logo2.png" width={"60%"} height={"60%"} alt="Logo SimpleGest" />
-                            </div>
-                        </div>
-                    </div>
+  //,Manejar el inicio de sesión
+  const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-                    {/* Panel Derecho */}
-                    <div className="right-panel col-sm-6 text-center">
-                        <form className="login-form d-flex flex-column justify-content-center" onSubmit={hanleSubmitForm}>
-                            <h2>Iniciar sesión</h2>
+    try {
+      const response = await fetch(
+        "http://simplegest.com:3000/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
 
-                            {error && <div className="alert alert-danger">{error}</div>}
+      const data = await response.json();
+      console.log("🧩 Respuesta del backend:", data);
 
-                            {/* Usuario */}
-                            <div className="input-group mb-3">
-                                <span className="input-group-text bg-white">
-                                    <FaUser className="text-primary" />
-                                </span>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    className="form-control"
-                                    name="username"
-                                    value={form.username}
-                                    onChange={hanleChangeForm}
-                                    placeholder="Ingrese su usuario"
-                                    required
-                                />
-                            </div>
+      if (!response.ok) {
+        toast.error(data.message || "Usuario o contraseña incorrectos");
+        return;
+      }
 
-                            {/* Contraseña */}
-                            <div className="input-group mb-3">
-                                <span className="input-group-text bg-white">
-                                    <FaLock className="text-primary" />
-                                </span>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    className="form-control"
-                                    name="password"
-                                    value={form.password}
-                                    onChange={hanleChangeForm}
-                                    placeholder="Ingrese su contraseña"
-                                    required
-                                />
-                            </div>
+      // ✅ Verifica que el backend devuelva el usuario completo:
+      // { token, user: { id, nombrecompleto, username, rol } }
+      if (!data.token || !data.user) {
+        toast.error("Respuesta inválida del servidor");
+        return;
+      }
 
-                            <button type="submit" className="btn btn-outline-primary mt-3" id="login-btn" disabled={loading}>
-                                <FaRightToBracket className="me-2" />
-                                {loading ? 'Cargando...' : 'Entrar'}
-                            </button>
-                        </form>
-                    </div>
-                </div>
+      // 💾 Guardar token y usuario completo en localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      toast.success(
+        `Bienvenido ${data.user.nombrecompleto || data.user.username}!`
+      );
+
+      // ⏳ Redirigir al Dashboard
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 1500);
+    } catch (error) {
+      console.error("❌ Error en login:", error);
+      toast.error("Error al conectar con el servidor");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="wrapper">
+        <div className="login-container">
+          {/* 🧭 Panel Izquierdo */}
+          <div className="left-panel">
+            <div className="logo text-center">
+              <img
+                src="/logo2.png"
+                width="60%"
+                height="60%"
+                alt="Logo SimpleGest"
+                className="mb-3"
+              />
             </div>
-        </>
-    )
-}
+          </div>
 
-export default Login
+          {/* 🧩 Panel Derecho */}
+          <div className="right-panel col-sm-6 text-center">
+            <form
+              className="login-form d-flex flex-column justify-content-center"
+              onSubmit={handleSubmitForm}
+            >
+              <h2 className="mb-4">Iniciar sesión</h2>
+
+              {/* Usuario */}
+              <div className="input-group mb-3">
+                <span className="input-group-text bg-white">
+                  <FaUser className="text-primary" />
+                </span>
+                <input
+                  type="text"
+                  name="username"
+                  className="form-control"
+                  value={form.username}
+                  onChange={handleChangeForm}
+                  placeholder="Ingrese su usuario"
+                  required
+                />
+              </div>
+
+              {/* Contraseña */}
+              <div className="input-group mb-3">
+                <span className="input-group-text bg-white">
+                  <FaLock className="text-primary" />
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  value={form.password}
+                  onChange={handleChangeForm}
+                  placeholder="Ingrese su contraseña"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-outline-primary mt-3"
+                id="login-btn"
+                disabled={loading}
+              >
+                <FaRightToBracket className="me-2" />
+                {loading ? "Cargando..." : "Entrar"}
+              </button>
+            </form>
+
+            <ToastContainer position="top-right" autoClose={4000} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;

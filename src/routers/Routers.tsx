@@ -34,7 +34,7 @@ const Routers = () => {
           <Route path="/nueva-solicitud" element={<NuevaSolicitud />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/lista-solicitudes" element={<ListaSolicitudes />} />
-          <Route path="/prestamos" element={<Prestamo />} />
+          <Route path="/prestamos" element={<Prestamo actualizarResumen={() => fetch("http://localhost:3000/api/dashboard/resumen")} />} />
           <Route path="/usuarios" element={<Usuarios />} />
         </Routes>
       </main>

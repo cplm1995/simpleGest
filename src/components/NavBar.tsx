@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { FaUserCircle } from "react-icons/fa";
 import {
   FaArrowRightFromBracket,
   FaFileCircleCheck,
@@ -5,27 +7,58 @@ import {
   FaHandHoldingHand,
   FaHouse,
   FaPenToSquare,
-  FaUserGroup
+  FaUserGroup,
 } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// 👤 Interfaz del usuario
+interface User {
+  nombrecompleto?: string;
+  username: string;
+  rol: string;
+}
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+
+  // Cargar usuario desde localStorage al iniciar
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    toast.success("Sesión cerrada correctamente");
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  };
+
   return (
-    <div className="container-sm">
-      <div className="bg-primary shadow">
-        <nav className="navbar navbar-expand-sm navbar-dark py-3">
+    <div className="container-sm px-0">
+      <div className="bg-primary shadow-sm">
+        <nav className="navbar navbar-expand-sm navbar-dark py-2">
           <div className="container-sm">
-            {/* Logo o título */}
+            {/* Logo */}
             <Link className="navbar-brand d-flex align-items-center" to="/dashboard">
               <img
-                src="../src/assets/img/logo2.png"
-                style={{ width: "60px", height: "60px" }}
+                src="/simpleGest.png"
                 alt="Logo"
-                className="me-2"
+                style={{ width: "50px", height: "50px" }}
+                className="me-2 rounded-circle bg-white p-1"
               />
+              <span className="fw-bold">SimpleGest</span>
             </Link>
 
-            {/* Botón hamburguesa para móvil */}
+            {/* Botón hamburguesa */}
             <button
               className="navbar-toggler"
               type="button"
@@ -38,47 +71,66 @@ const NavBar = () => {
               <span className="navbar-toggler-icon"></span>
             </button>
 
-            {/* Links de navegación */}
+            {/* Links */}
             <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ms-auto small fw-semibold">
+              <ul className="navbar-nav ms-auto align-items-center fw-semibold small">
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">
                     <FaHouse className="me-1" /> Dashboard
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/lista-solicitudes">
                     <FaFileCircleCheck className="me-1" /> Solicitudes
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/nueva-solicitud">
                     <FaFilePen className="me-1" /> Nueva Solicitud
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/registro">
                     <FaPenToSquare className="me-1" /> Registro
                   </Link>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/prestamos">
                     <FaHandHoldingHand className="me-1" /> Préstamo
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/usuarios">
-                    <FaUserGroup className="me-1" /> Usuarios
-                  </Link>
-                </li>
-                <li className="nav-item">
+
+                {/* 🔒 Solo visible si el rol es admin */}
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/usuarios">
+                      <FaUserGroup className="me-1" /> Usuarios
+                    </Link>
+                  </li>
+                )}
+
+                {/* 👤 Usuario logueado */}
+                {user && (
+                  <li className="nav-item ms-3 text-white d-flex flex-column align-items-center">
+                    <FaUserCircle size={22} />
+                    <span className="small text-center">
+                      {user.nombrecompleto || user.username}
+                      <br />
+                      <span className="badge bg-light text-dark">{user.rol}</span>
+                    </span>
+                  </li>
+                )}
+
+                {/* 🚪 Botón salir */}
+                <li className="nav-item ms-3">
                   <button
-                    className="btn btn-danger btn-sm ms-3"
+                    className="btn btn-danger btn-sm"
                     id="logoutButton"
-                    onClick={() => {
-                      localStorage.removeItem("token");
-                      window.location.href = "/login";
-                    }}
+                    onClick={handleLogout}
                   >
                     <FaArrowRightFromBracket className="me-1" /> Salir
                   </button>
@@ -88,6 +140,8 @@ const NavBar = () => {
           </div>
         </nav>
       </div>
+
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

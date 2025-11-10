@@ -1,5 +1,7 @@
 import { useEffect, useState, type Key } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaRegFloppyDisk, FaXmark } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 
@@ -33,6 +35,13 @@ const Registro = () => {
     );
   });
 
+
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/dashboard"); // redirige al Dashboard
+  };
+
   //  Paginación
   const indiceUltimaFila = paginaActual * filasPorPagina;
   const indicePrimeraFila = indiceUltimaFila - filasPorPagina;
@@ -47,7 +56,7 @@ const Registro = () => {
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/articulos");
+        const response = await fetch("http://simplegest.com:3000/api/articulos");
         const data = await response.json();
         setArticulos(data);
       } catch (error) {
@@ -72,7 +81,7 @@ const Registro = () => {
       if (editandoId) {
         //  EDITAR
         const response = await fetch(
-          `http://localhost:3000/api/articulos/${editandoId}`,
+          `http://simplegest.com:3000/api/articulos/${editandoId}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -92,7 +101,7 @@ const Registro = () => {
         setEditandoId(null);
       } else {
         // ➕ CREAR
-        const response = await fetch("http://localhost:3000/api/articulos", {
+        const response = await fetch("http://simplegest.com:3000/api/articulos", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(datosRegistro),
@@ -128,24 +137,46 @@ const Registro = () => {
   };
 
   // Eliminar artículo
-  const handleEliminar = async (id: string | undefined) => {
+  const handleEliminar = (id: string | undefined) => {
     if (!id) return;
-    if (!confirm("¿Seguro que quieres eliminar este artículo?")) return;
 
-    try {
-      const response = await fetch(`http://localhost:3000/api/articulos/${id}`, {
-        method: "DELETE",
-      });
+    toast.info(
+      <div>
+        <p>¿Seguro que quieres eliminar este artículo?</p>
+        <div className="mt-2 d-flex justify-content-end">
+          <button
+            className="btn btn-sm btn-danger me-2"
+            onClick={async () => {
+              try {
+                const response = await fetch(
+                  `http://simplegest.com:3000/api/articulos/${id}`,
+                  { method: "DELETE" }
+                );
 
-      if (!response.ok) throw new Error("Error al eliminar");
-      toast.warning("Artículo eliminado correctamente");
+                if (!response.ok) throw new Error("Error al eliminar");
 
+                toast.dismiss(); // cerrar confirmación
+                toast.warning("Artículo eliminado correctamente");
 
-      setArticulos((prev) => prev.filter((a) => a._id !== id));
-
-    } catch (error) {
-      console.error(error);
-    }
+                setArticulos((prev) => prev.filter((a) => a._id !== id));
+              } catch (error) {
+                console.error(error);
+                toast.error("Error al eliminar artículo");
+              }
+            }}
+          >
+            Sí, eliminar
+          </button>
+          <button
+            className="btn btn-sm btn-secondary"
+            onClick={() => toast.dismiss()}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>,
+      { autoClose: false }
+    );
   };
 
   const datosRegistroArticulosChange = (
@@ -187,7 +218,7 @@ const Registro = () => {
                   onChange={(e) => {
                     setTipoRegistro(e.target.value);
                     datosRegistroArticulosChange(e);
-                  } }
+                  }}
                   required
                 >
                   <option value="">[Seleccione]</option>
@@ -245,15 +276,16 @@ const Registro = () => {
             </div>
           </div>
           <div className="text-end mb-3">
-            <button type="submit" className="btn btn-primary m-3">
-              {editandoId ? "Actualizar" : "Guardar"}
+            <button type="submit" className="btn btn-primary m-3" id="btnGeneral">
+              <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> {editandoId ? "Actualizar" : "Guardar"}
             </button>
             <button
               type="button"
+              id="btnGeneralCancelar"
               className="btn btn-secondary m-3"
-              onClick={limpiarFormulario}
+              onClick={handleCancel}
             >
-              Cancelar
+             <FaXmark style={{ marginRight: "5px", marginTop: -3 }} /> Cancelar
             </button>
           </div>
         </div>
@@ -353,7 +385,7 @@ const Registro = () => {
         </ul>
       </nav>
     </div>
-    <ToastContainer position="top-right" autoClose={3000} /></>
+      <ToastContainer position="top-right" autoClose={3000} /></>
   );
 };
 
