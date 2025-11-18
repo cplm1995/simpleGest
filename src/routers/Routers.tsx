@@ -12,6 +12,7 @@ import Usuarios from "../pages/Usuarios"
 import Login from "../components/Login"
 import NavBar from "../components/NavBar"
 import Footer from "../components/Footer"  // 👈 Importamos el footer
+import Autorizacion from "../pages/Autorizacion"
 
 const Routers = () => {
   const location = useLocation()
@@ -32,6 +33,7 @@ const Routers = () => {
           {/* Rutas principales */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/nueva-solicitud" element={<NuevaSolicitud />} />
+          <Route path="/autorizacion" element={<Autorizacion />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="/lista-solicitudes" element={<ListaSolicitudes />} />
           <Route path="/prestamos" element={<Prestamo actualizarResumen={() => fetch("http://localhost:3000/api/dashboard/resumen")} />} />

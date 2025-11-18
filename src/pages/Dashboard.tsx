@@ -81,9 +81,9 @@ const Dashboard = () => {
           <div className="col-md-3 mb-3">
             <div className="card shadow-sm" style={{ border: 'none' }}>
               <div className="card-body">
-                <h5 className="card-title text-success" ><FaBox style={{ color: 'green', marginRight: 10 }} /> Artículos</h5>
-                <p className="card-text fs-4 fw-bold text-success">{resumen.totalArticulos}</p>
-                <a href="/registro" className="btn btn-success btn-sm">Ver artículos</a>
+                <h5 className="card-title text-muted" ><FaBox style={{ color: 'gray', marginRight: 10 }} /> Artículos</h5>
+                <p className="card-text fs-4 fw-bold text-muted">{resumen.totalArticulos}</p>
+                <a href="/registro" className="btn btn-outline-secondary btn-sm w-100">Ver artículos</a>
               </div>
             </div>
           </div>
@@ -91,9 +91,9 @@ const Dashboard = () => {
           <div className="col-md-3 mb-3">
             <div className="card shadow-sm" style={{ border: 'none' }}>
               <div className="card-body">
-                <h5 className="card-title text-warning"> <FaFileLines style={{ color: '#ffcc00', marginRight: 10 }} /> Solicitudes</h5>
-                <p className="card-text fs-4 fw-bold text-warning">{resumen.totalSolicitudes}</p>
-                <a href="/lista-solicitudes" className="btn btn-warning btn-sm">Gestionar</a>
+                <h5 className="card-title text-muted"> <FaFileLines style={{ color: 'gray', marginRight: 10 }} /> Solicitudes</h5>
+                <p className="card-text fs-4 fw-bold text-muted">{resumen.totalSolicitudes}</p>
+                <a href="/lista-solicitudes" className="btn btn-outline-secondary btn-sm w-100">Gestionar</a>
               </div>
             </div>
           </div>
@@ -101,9 +101,9 @@ const Dashboard = () => {
           <div className="col-md-3 mb-3">
             <div className="card shadow-sm" style={{ border: 'none' }}>
               <div className="card-body">
-                <h5 className="card-title text-danger"><FaRotate style={{ color: 'red', marginRight: 10,  }} /> Préstamos Pendientes</h5>
-                <p className="card-text fs-4 fw-bold text-danger">{resumen.prestamosPendientes}</p>
-                <a href="/prestamos" className="btn btn-danger btn-sm">Revisar</a>
+                <h5 className="card-title text-muted"><FaRotate style={{ color: 'gray', marginRight: 10,  }} /> Préstamos Pendientes</h5>
+                <p className="card-text fs-4 fw-bold text-muted">{resumen.prestamosPendientes}</p>
+                <a href="/prestamos" className="btn btn-outline-secondary btn-sm w-100">Revisar</a>
               </div>
             </div>
           </div>
@@ -111,11 +111,11 @@ const Dashboard = () => {
           <div className="col-md-3 mb-3">
             <div className="card shadow-sm" style={{ border: 'none' }}>
               <div className="card-body">
-                <h5 className="card-title text-primary">
-                  <FaCheckToSlot style={{ color: 'blue', marginRight: 10 }} /> Préstamos Entregados
+                <h5 className="card-title text-muted">
+                  <FaCheckToSlot style={{ color: 'gray', marginRight: 10 }} /> Préstamos Entregados
                 </h5>
-                <p className="card-text fs-4 fw-bold text-primary">{resumen.entregados}</p>
-                <a href="/prestamos" className="btn btn-primary btn-sm">Ver entregados</a>
+                <p className="card-text fs-4 fw-bold text-muted">{resumen.entregados}</p>
+                <a href="/prestamos" className="btn btn-outline-secondary btn-sm w-100">Ver entregados</a>
               </div>
             </div>
           </div>

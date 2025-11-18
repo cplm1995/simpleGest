@@ -52,7 +52,7 @@ const NuevaSolicitud = () => {
     }
 
     if(cantidad > articuloDB.stock){
-      toast.error(`No hay suficiente stock para ${material}. Disponible: ${articuloDB.stock}`);
+      toast.error(`No hay suficiente stock para ${material}`);
       return;
     }
 

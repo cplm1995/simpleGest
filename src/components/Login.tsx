@@ -13,7 +13,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // 🧩 Manejar cambios en los inputs
+  // Manejar cambios en los inputs
   const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
@@ -54,14 +54,14 @@ const Login = () => {
         return;
       }
 
-      // ✅ Verifica que el backend devuelva el usuario completo:
+      // Verifica que el backend devuelva el usuario completo:
       // { token, user: { id, nombrecompleto, username, rol } }
       if (!data.token || !data.user) {
         toast.error("Respuesta inválida del servidor");
         return;
       }
 
-      // 💾 Guardar token y usuario completo en localStorage
+      // Guardar token y usuario completo en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -69,7 +69,7 @@ const Login = () => {
         `Bienvenido ${data.user.nombrecompleto || data.user.username}!`
       );
 
-      // ⏳ Redirigir al Dashboard
+      // Redirigir al Dashboard
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 1500);

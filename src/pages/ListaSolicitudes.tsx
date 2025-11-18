@@ -55,7 +55,7 @@ const ListaSolicitudes = () => {
             onClick={async () => {
               try {
                 const response = await fetch(
-                  `http://lsimplegest.com:3000/api/solicitudes/${id}`,
+                  `http://simplegest.com:3000/api/solicitudes/${id}`,
                   { method: "DELETE" }
                 );
 

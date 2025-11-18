@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { FaCheckCircle, FaUserCircle } from "react-icons/fa";
 import {
   FaArrowRightFromBracket,
   FaFileCircleCheck,
@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// 👤 Interfaz del usuario
+//  Interfaz del usuario
 interface User {
   nombrecompleto?: string;
   username: string;
@@ -48,7 +48,10 @@ const NavBar = () => {
         <nav className="navbar navbar-expand-sm navbar-dark py-2">
           <div className="container-sm">
             {/* Logo */}
-            <Link className="navbar-brand d-flex align-items-center" to="/dashboard">
+            <Link
+              className="navbar-brand d-flex align-items-center"
+              to="/dashboard"
+            >
               <img
                 src="/simpleGest.png"
                 alt="Logo"
@@ -74,17 +77,24 @@ const NavBar = () => {
             {/* Links */}
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav ms-auto align-items-center fw-semibold small">
-                <li className="nav-item">
-                  <Link className="nav-link" to="/dashboard">
-                    <FaHouse className="me-1" /> Dashboard
-                  </Link>
-                </li>
+                
+                {/* Solo visible si el rol es admin */}
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
+                      <FaHouse className="me-1" /> Dashboard
+                    </Link>
+                  </li>
+                )}
 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/lista-solicitudes">
-                    <FaFileCircleCheck className="me-1" /> Solicitudes
-                  </Link>
-                </li>
+                {/* Solo visible si el rol es admin */}
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/lista-solicitudes">
+                      <FaFileCircleCheck className="me-1" /> Solicitudes
+                    </Link>
+                  </li>
+                )}
 
                 <li className="nav-item">
                   <Link className="nav-link" to="/nueva-solicitud">
@@ -92,19 +102,34 @@ const NavBar = () => {
                   </Link>
                 </li>
 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/registro">
-                    <FaPenToSquare className="me-1" /> Registro
-                  </Link>
-                </li>
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/autorizacion">
+                      <FaCheckCircle className="me-1" /> Autorización
+                    </Link>
+                  </li>
+                )}
 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/prestamos">
-                    <FaHandHoldingHand className="me-1" /> Préstamo
-                  </Link>
-                </li>
 
-                {/* 🔒 Solo visible si el rol es admin */}
+                {/*Solo visible si el rol es admin*/}
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/registro">
+                      <FaPenToSquare className="me-1" /> Registro
+                    </Link>
+                  </li>
+                )}
+
+                {/*Solo visible si el rol es admin*/}
+                {user?.rol === "admin" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/prestamos">
+                      <FaHandHoldingHand className="me-1" /> Préstamo
+                    </Link>
+                  </li>
+                )}
+
+                {/* Solo visible si el rol es admin */}
                 {user?.rol === "admin" && (
                   <li className="nav-item">
                     <Link className="nav-link" to="/usuarios">
@@ -113,19 +138,21 @@ const NavBar = () => {
                   </li>
                 )}
 
-                {/* 👤 Usuario logueado */}
+                {/* Usuario logueado */}
                 {user && (
                   <li className="nav-item ms-3 text-white d-flex flex-column align-items-center">
                     <FaUserCircle size={22} />
                     <span className="small text-center">
                       {user.nombrecompleto || user.username}
                       <br />
-                      <span className="badge bg-light text-dark">{user.rol}</span>
+                      <span className="badge bg-light text-dark">
+                        {user.rol}
+                      </span>
                     </span>
                   </li>
                 )}
 
-                {/* 🚪 Botón salir */}
+                {/* Botón salir */}
                 <li className="nav-item ms-3">
                   <button
                     className="btn btn-danger btn-sm"
