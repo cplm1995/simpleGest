@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaRegFloppyDisk } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { apiFetch } from "../utils/apiFetch";
 
 interface PrestamoItem {
   _id?: string;
@@ -36,13 +37,15 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
   const [paginaActual, setPaginaActual] = useState(1);
   const filasPorPagina = 5;
 
-  // Cargar préstamos
+  // Cargar préstamos (CORREGIDO)
   const fetchPrestamos = async () => {
     try {
-      const res = await fetch("http://simplegest.com:3000/api/prestamos");
-      if (!res.ok) throw new Error("Error al cargar");
-      const data = await res.json();
-      const ordenados = data.docs ? data.docs.reverse() : data.reverse();
+      const data = await apiFetch("/api/prestamos"); // construye URL con VITE_API_URL
+      const ordenados = data.docs
+        ? data.docs.reverse()
+        : Array.isArray(data)
+        ? data.reverse()
+        : [];
       setPrestamos(ordenados);
     } catch (error) {
       console.error(error);
@@ -67,27 +70,24 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
     });
   };
 
-  // Guardar préstamo
+  // Guardar préstamo (CORREGIDO)
   const handleGuardarClick = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://simplegest.com:3000/api/prestamos", {
+      const nuevoPrestamo = await apiFetch("/api/prestamos", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(prestamo),
       });
 
-      if (!response.ok) throw new Error("Error al guardar");
-
-      const nuevoPrestamo = await response.json();
       toast.success("Préstamo guardado");
 
-      setPrestamos((prev) => [nuevoPrestamo, ...prev]);
+      const data = await nuevoPrestamo.json(); // Parse the response to get the actual PrestamoItem
+      setPrestamos((prev) => [data, ...prev]);
       limpiarFormulario();
 
-      if (actualizarResumen) actualizarResumen();
+      actualizarResumen?.();
     } catch (error) {
       console.error(error);
       toast.error("Error al guardar");
@@ -107,7 +107,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
     });
   };
 
-  // Manejar checkbox
+  // Manejar checkbox (CORREGIDO)
   const handleCheckboxChange = async (id?: string) => {
     if (!id) return;
 
@@ -123,14 +123,12 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
           : new Date().toLocaleDateString("es-CO"),
     };
 
-    setPrestamos((prev) =>
-      prev.map((p) => (p._id === id ? actualizado : p))
-    );
+    // Actualizar UI al instante
+    setPrestamos((prev) => prev.map((p) => (p._id === id ? actualizado : p)));
 
     try {
-      await fetch(`http://simplegest.com:3000/api/prestamos/${id}`, {
+      await apiFetch(`/api/prestamos/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entregado: actualizado.entregado,
           fechaDevolucion: actualizado.fechaDevolucion,
@@ -138,10 +136,12 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
       });
 
       toast.success("Préstamo actualizado");
-      if (actualizarResumen) actualizarResumen();
+
+      actualizarResumen?.();
     } catch (error) {
       console.error(error);
       toast.error("Error al actualizar");
+
       // rollback
       fetchPrestamos();
     }
@@ -155,7 +155,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
       (p.fechaPrestamo || "").toLowerCase().includes(q) ||
       (p.fechaDevolucion || "").toLowerCase().includes(q) ||
       (p.articulo || "").toLowerCase().includes(q) ||
-      (p.cantidad?.toString() || "").toLowerCase().includes(q) ||
+      (p.cantidad?.toString() || "").includes(q) ||
       (p.nombre || "").toLowerCase().includes(q)
     );
   });
@@ -253,7 +253,10 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       id="btnGeneral"
                       className="btn btn-md btn-outline-primary"
                     >
-                     <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> Guardar
+                      <FaRegFloppyDisk
+                        style={{ marginRight: "5px", marginTop: -3 }}
+                      />{" "}
+                      Guardar
                     </button>
                   </div>
                 </div>

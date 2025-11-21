@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { FaBox, FaChartLine, FaCheckToSlot, FaFileLines, FaRotate } from "react-icons/fa6";
+import { apiFetch } from "../utils/apiFetch";
 
 interface Articulo {
   _id: string;
@@ -31,11 +32,9 @@ const Dashboard = () => {
   // cargar resumen
   const fetchResumen = useCallback(async () => {
     try {
-      const response = await fetch(
-        "http://simplegest.com:3000/api/dashboard/resumen"
+      const data = await apiFetch(
+        "/api/dashboard/resumen"
       );
-      if (!response.ok) throw new Error("Error en la petición");
-      const data = await response.json();
       setResumen(data);
     } catch (error) {
       console.error("Error al cargar resumen:", error);
@@ -45,9 +44,7 @@ const Dashboard = () => {
   // cargar artículos y filtrar próximos a agotarse
   const fetchArticulos = useCallback(async () => {
     try {
-      const response = await fetch("http://simplegest.com:3000/api/articulos");
-      if (!response.ok) throw new Error("Error al cargar artículos");
-      const data = await response.json();
+      const data = await apiFetch("/api/articulos");
       const proximos = data.filter((a: Articulo) => a.stock <= UMBRAL_MINIMO);
       setBajoStock(proximos);
     } catch (error) {
@@ -93,7 +90,7 @@ const Dashboard = () => {
               <div className="card-body">
                 <h5 className="card-title text-muted"> <FaFileLines style={{ color: 'gray', marginRight: 10 }} /> Solicitudes</h5>
                 <p className="card-text fs-4 fw-bold text-muted">{resumen.totalSolicitudes}</p>
-                <a href="/lista-solicitudes" className="btn btn-outline-secondary btn-sm w-100">Gestionar</a>
+                <a href="/autorizacion" className="btn btn-outline-secondary btn-sm w-100">Gestionar</a>
               </div>
             </div>
           </div>
@@ -144,7 +141,6 @@ const Dashboard = () => {
             </table>
           )}
         </div>
-        <img src="/simpleGest.png" className="img-fluid" alt="" id="imgDash" />
       </div>
     </>
   );

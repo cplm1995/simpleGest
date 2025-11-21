@@ -29,23 +29,21 @@ a:hover{
   font-family: 'Poppins';
   color: white;
   padding: 10px 10px 10px 10px;
-  border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, #2183eb, #0056b3);
 }
 
 #btnGeneral:hover{
   color: rgb(255, 255, 255);
   padding: 10px 10px 10px 10px;
   border: none;
-  background: linear-gradient(135deg, #4a9ef7, #0a5fb9);
+  background: linear-gradient(135deg, #268fff, #037dff);
 }
 
 #btnGeneralCancelar{
   font-family: 'Poppins';
   color: white;
   padding: 10px 10px 10px 10px;
-  border-radius: 10px;
   border: none;
   background: linear-gradient(135deg, #ee5e5e, #b30000);
 }
@@ -53,9 +51,8 @@ a:hover{
   font-family: 'Poppins';
   color: white;
   padding: 10px 10px 10px 10px;
-  border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #6b6868, #868080);
+  background: linear-gradient(135deg, #ff0101, #ff0808);
 }
 
 /*Imagen de fondo en el Dashboard*/
@@ -316,3 +313,21 @@ button:hover {
 b:hover{
   color: rgb(255, 0, 0);
 }
+
+/*Barra de busqueda nueva solicitud*/
+/* Ocultar completamente la barra de búsqueda del Select */
+/*  .selectMaterial__input-container {
+    height: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }*/
+
+  /* Ocultar el input real pero permitir escribir */
+ /* .selectMaterial__input {
+    opacity: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }*/

@@ -5,10 +5,16 @@ import Select from "react-select";
 import { FaRegFloppyDisk, FaXmark } from "react-icons/fa6";
 import { FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../utils/apiFetch";
 
 const NuevaSolicitud = () => {
   const [articulosDB, setArticulosDB] = useState<
-    { _id: string; nombreArticulo: string; descripcion?: string; stock: number }[]
+    {
+      _id: string;
+      nombreArticulo: string;
+      descripcion?: string;
+      stock: number;
+    }[]
   >([]);
   const [listaMateriales, setListaMateriales] = useState<
     { codigoArticulo: string; material: string; cantidad: number }[]
@@ -17,6 +23,7 @@ const NuevaSolicitud = () => {
   const [datosMateriales, setDatosMateriales] = useState({
     codigoArticulo: "",
     material: "",
+    descripcion: "",
     cantidad: 0,
   });
 
@@ -29,49 +36,62 @@ const NuevaSolicitud = () => {
   useEffect(() => {
     const fetchArticulos = async () => {
       try {
-        const response = await fetch(
-          "http://simplegest.com:3000/api/articulos"
-        );
-        const data = await response.json();
+        // apiFetch ya devuelve JSON, no Response
+        const data = await apiFetch("/api/articulos");
         setArticulosDB(data);
       } catch (error) {
         console.error("Error al obtener los artículos:", error);
+        toast.error("Error al obtener los artículos");
       }
     };
     fetchArticulos();
   }, []);
 
+  // Agregar material
   const handleAgregarMaterial = () => {
     const { codigoArticulo, material, cantidad } = datosMateriales;
-    if (!codigoArticulo || !cantidad) return;
 
-    const articuloDB = articulosDB.find((a) => a._id === codigoArticulo);
-    if (!articuloDB) {
-      toast.error("Material no encontrado");
+    if (!material || !cantidad) {
+      toast.error("Debe escribir un material y una cantidad");
       return;
     }
 
-    if(cantidad > articuloDB.stock){
+    // Buscar por ID o por nombre
+    const articuloDB =
+      articulosDB.find((a) => a._id === codigoArticulo) ||
+      articulosDB.find(
+        (a) => a.nombreArticulo.toLowerCase() === material.toLowerCase().trim()
+      );
+
+    if (!articuloDB) {
+      toast.error("Material no encontrado en inventario");
+      return;
+    }
+
+    if (cantidad > articuloDB.stock) {
       toast.error(`No hay suficiente stock para ${material}`);
       return;
     }
 
     const nuevoMaterial = {
-      codigoArticulo,
-      material,
+      codigoArticulo: articuloDB._id,
+      material: articuloDB.nombreArticulo,
+      descripcion: articuloDB.descripcion || "",
       cantidad,
     };
-    setListaMateriales([...listaMateriales, nuevoMaterial]);
-    setDatosMateriales({ codigoArticulo: "", material: "", cantidad: 0 });
-    toast.success(`${material} agregado a la lista`);
-  };
 
+    setListaMateriales([...listaMateriales, nuevoMaterial]);
+    setDatosMateriales({ codigoArticulo: "", material: "", descripcion: "", cantidad: 0 });
+    toast.success(`${articuloDB.nombreArticulo} agregado a la lista`);
+  };
+  // Eliminar material
   const handleEliminarMaterial = (index: number) => {
     const nuevaLista = listaMateriales.filter((_, i) => i !== index);
     setListaMateriales(nuevaLista);
     toast.error(`eliminado a la lista`);
   };
 
+  // Datos solicitante
   const [datosSolicitante, setDatosSolicitante] = useState({
     areaSolicitante: "",
     fechaSolicitud: "",
@@ -84,6 +104,7 @@ const NuevaSolicitud = () => {
     otroServicio: "",
   });
 
+  // servicios
   const [serviciosSolicitados, setServiciosSolicitados] = useState<{
     servicios: string[];
     cual: string;
@@ -94,6 +115,7 @@ const NuevaSolicitud = () => {
     descripcionProblema: "",
   });
 
+  // Chekbox
   const handleCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -110,6 +132,9 @@ const NuevaSolicitud = () => {
     });
   };
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Datos solicitante
   const datosSolicitanteChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -120,6 +145,7 @@ const NuevaSolicitud = () => {
     });
   };
 
+  // Guardar solicitud
   const guardarDatosSolicitante = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -134,19 +160,20 @@ const NuevaSolicitud = () => {
     };
 
     try {
-      const response = await fetch("http://simplegest.com:3000/api/solicitudes", {
+      const response = await apiFetch("/api/solicitudes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(datosFormulario),
       });
-      await response.json();
 
-      if (!response.ok) throw new Error("Error al guardar los datos");
+      // No hacer response.json(), apiFetch ya devuelve JSON
+      // const data = await response.json();
+
       toast.success("Datos guardados correctamente");
 
-      //Limpiar campos al guardar
+      // Limpiar campos al guardar
       setDatosSolicitante({
         areaSolicitante: "",
         fechaSolicitud: "",
@@ -591,45 +618,84 @@ const NuevaSolicitud = () => {
                   <label htmlFor="materialH" className="form-label">
                     Material <span className="text-danger">*</span>
                   </label>
-                  <Select
-                    id="materialH"
-                    options={articulosDB.map((articulo) => ({
-                      value: articulo._id,
-                      label: articulo.nombreArticulo,
-                      descripcion: articulo.descripcion,
-                    }))}
-                     formatOptionLabel={(option: any) => (
-                      <div>
-                        <div style={{ fontWeight: "bold" }}>{option.label}</div>
-                        <div style={{ fontSize: "12px", color: "#666" }}>
-                          {option.descripcion || "Sin descripción"}
+
+                  {/*Mostrar input si el rol es usuario*/}
+                  {user?.rol === "usuario" ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Escriba el nombre del material..."
+                      title="Buscar"
+                      value={datosMateriales.material}
+                      onChange={(e) => {
+                        const texto = e.target.value;
+
+                        // Guarda lo que el usuario escribe
+                        setDatosMateriales({
+                          ...datosMateriales,
+                          material: texto,
+                          codigoArticulo: "", // se llenará automáticamente si coincide el nombre
+                        });
+
+                        // Buscar coincidencia exacta por nombre
+                        const articulo = articulosDB.find(
+                          (a) =>
+                            a.nombreArticulo.toLowerCase() ===
+                            texto.toLowerCase().trim()
+                        );
+
+                        if (articulo) {
+                          setDatosMateriales((prev) => ({
+                            ...prev,
+                            codigoArticulo: articulo._id,
+                          }));
+                        }
+                      }}
+                    />
+                  ) : (
+                    /* AQUI DEJAS TU SELECT NORMAL PARA ADMIN */
+                    <Select
+                      id="materialH"
+                      options={articulosDB.map((articulo) => ({
+                        value: articulo._id,
+                        label: articulo.nombreArticulo,
+                        descripcion: articulo.descripcion,
+                      }))}
+                      isSearchable={true}
+                      formatOptionLabel={(option: any) => (
+                        <div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {option.label}
+                          </div>
+                          <div style={{ fontSize: "12px", color: "#666" }}>
+                            {option.descripcion || "Sin descripción"}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    value={
-                      datosMateriales.codigoArticulo
-                        ? {
-                            value: datosMateriales.codigoArticulo,
-                            label: datosMateriales.material,
-                            descripcion: articulosDB.find(
-                              (a) => a._id === datosMateriales.codigoArticulo
-                            )?.descripcion,
-                          }
-                        : null
-                    }
-                    onChange={(option) => {
-                      const selected = articulosDB.find(
-                        (a) => a._id === option?.value
-                      );
-                      setDatosMateriales({
-                        ...datosMateriales,
-                        codigoArticulo: option ? option.value : "",
-                        material: selected ? selected.nombreArticulo : "",
-                      });
-                    }}
-                    placeholder="Escriba para buscar..."
-                    isClearable
-                  />
+                      )}
+                      value={
+                        datosMateriales.codigoArticulo
+                          ? {
+                              value: datosMateriales.codigoArticulo,
+                              label: datosMateriales.material,
+                              descripcion: datosMateriales.descripcion,
+                            }
+                          : null
+                      }
+                      onChange={(option) => {
+                        const selected = articulosDB.find(
+                          (a) => a._id === option?.value
+                        );
+                        setDatosMateriales({
+                          ...datosMateriales,
+                          codigoArticulo: option ? option.value : "",
+                          material: selected ? selected.nombreArticulo : "",
+                          descripcion: selected ? selected.descripcion : "",
+                        });
+                      }}
+                      placeholder="Escriba para buscar..."
+                      isClearable
+                    />
+                  )}
                 </div>
 
                 {/* Cantidad */}
@@ -655,12 +721,15 @@ const NuevaSolicitud = () => {
                 {/* Botón guardar */}
                 <div className="form-group col-sm-3 d-flex align-items-end">
                   <button
-                  id="btnGeneral"
+                    id="btnGeneral"
                     type="button"
                     className="btn btn-primary w-100"
                     onClick={handleAgregarMaterial}
                   >
-                    <FaPlusCircle style={{ marginRight: "5px", marginTop: -3 }} /> Agregar
+                    <FaPlusCircle
+                      style={{ marginRight: "5px", marginTop: -3 }}
+                    />{" "}
+                    Agregar
                   </button>
                 </div>
               </div>
@@ -685,7 +754,9 @@ const NuevaSolicitud = () => {
                           className="btn btn-danger btn-sm"
                           onClick={() => handleEliminarMaterial(index)}
                         >
-                         <FaTrashAlt style={{ marginRight: "1px", marginTop: -3 }} />
+                          <FaTrashAlt
+                            style={{ marginRight: "1px", marginTop: -3 }}
+                          />
                         </button>
                       </td>
                     </tr>
@@ -694,11 +765,24 @@ const NuevaSolicitud = () => {
               </table>
               <br />
               <div className="botones d-grid gap-2 d-md-flex justify-content-md-end no-print">
-                <button type="submit" id="btnGeneral" className="btn btn-primary">
-                   <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} />Registrar
+                <button
+                  type="submit"
+                  id="btnGeneral"
+                  className="btn btn-primary"
+                >
+                  <FaRegFloppyDisk
+                    style={{ marginRight: "5px", marginTop: -3 }}
+                  />
+                  Registrar
                 </button>
-                <button type="button" id="btnGeneralCancelar" className="btn btn-secondary" onClick={handleCancel}>
-                  <FaXmark style={{ marginRight: "5px", marginTop: -3 }} />Cancelar
+                <button
+                  type="button"
+                  id="btnGeneralCancelar"
+                  className="btn btn-secondary"
+                  onClick={() => handleCancel()}
+                >
+                  <FaXmark style={{ marginRight: "5px", marginTop: -3 }} />
+                  Cancelar
                 </button>
               </div>
 

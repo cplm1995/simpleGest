@@ -7,6 +7,11 @@ import {
   FaUserPlus,
 } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
+import { apiFetch } from "../utils/apiFetch";
+import { FaTrashAlt } from "react-icons/fa";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+
 
 interface Usuario {
   _id?: string;
@@ -32,8 +37,7 @@ const Usuarios = () => {
   // 🔹 función global para cargar usuarios
   const fetchUsuarios = async () => {
     try {
-      const response = await fetch("http://simplegest.com:3000/api/usuarios");
-      const data = await response.json();
+      const data = await apiFetch("/api/usuarios");
       setUsuarios(data);
     } catch (error) {
       console.error("Error cargando usuarios:", error);
@@ -64,14 +68,18 @@ const Usuarios = () => {
     setPaginaActual(1);
   }, [busqueda]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleGuardarClick = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleGuardarClick = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     if (!formData.rol) {
@@ -82,34 +90,53 @@ const Usuarios = () => {
     try {
       console.log("formData:", formData);
 
-      const response = await fetch("http://simplegest.com:3000/api/auth/register", {
+      const data = await apiFetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast.error(data.message || "Error al guardar los datos");
-        return;
-      }
 
       toast.success(data.message || "Usuario registrado correctamente");
 
       // Refrescar lista
       await fetchUsuarios();
 
-      setUsuarios((prev) => [
-        { ...formData, _id: data.usuario?._id },
-        ...prev,
-      ]);
-
       limpiarFormulario();
     } catch (error) {
       toast.error("Error en la conexión con el servidor");
       console.error(error);
     }
+  };
+
+  //Eliminar usuario
+  const eliminarUsuario = (id: string) => {
+    confirmAlert({
+      title: "Confirmar eliminación",
+      message: "¿Estás seguro que deseas eliminar este usuario?",
+      buttons: [
+        {
+          label: "Sí",
+          onClick: async () => {
+            try {
+              const res = await apiFetch(`/usuarios/${id}`, {
+                method: "DELETE",
+              });
+
+              toast.success(res.msg);
+              fetchUsuarios();
+            } catch (error: any) {
+              toast.error("No se pudo eliminar el usuario");
+            }
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            // No hacemos nada si el usuario cancela
+          },
+        },
+      ],
+    });
   };
 
   const limpiarFormulario = () => {
@@ -130,7 +157,14 @@ const Usuarios = () => {
             <div className="card-header">Ingreso nuevo usuario</div>
             <form onSubmit={handleGuardarClick} className="mt-4">
               <div className="input-group-text bg-white mb-3 mt-4">
-                <FaUserPen style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue" }} />
+                <FaUserPen
+                  style={{
+                    marginRight: "6px",
+                    marginTop: -3,
+                    fontSize: "20px",
+                    color: "blue",
+                  }}
+                />
                 <input
                   value={formData.nombrecompleto}
                   onChange={handleChange}
@@ -142,7 +176,14 @@ const Usuarios = () => {
                 />
               </div>
               <div className="input-group-text bg-white mb-3">
-                <FaUserPlus style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue" }} />
+                <FaUserPlus
+                  style={{
+                    marginRight: "6px",
+                    marginTop: -3,
+                    fontSize: "20px",
+                    color: "blue",
+                  }}
+                />
                 <input
                   value={formData.username}
                   onChange={handleChange}
@@ -154,7 +195,14 @@ const Usuarios = () => {
                 />
               </div>
               <div className="input-group-text bg-white mb-3">
-                <FaLock style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue" }} />
+                <FaLock
+                  style={{
+                    marginRight: "6px",
+                    marginTop: -3,
+                    fontSize: "20px",
+                    color: "blue",
+                  }}
+                />
                 <input
                   value={formData.password}
                   onChange={handleChange}
@@ -166,7 +214,15 @@ const Usuarios = () => {
                 />
               </div>
               <div className="input-group-text bg-white mb-3">
-                <FaGears style={{ marginRight: "6px", marginTop: -3, fontSize: "20px", color: "blue" }} />
+                <FaGears
+                  style={{
+                    marginRight: "6px",
+                    marginTop: -3,
+                    fontSize: "20px",
+                    color: "blue",
+                  }}
+                />
+                <label htmlFor="rol">Rol</label>
                 <select
                   name="rol"
                   id="rol"
@@ -175,13 +231,18 @@ const Usuarios = () => {
                   className="form-select"
                   required
                 >
-                  <option value="" disabled>Seleccione un rol</option>
+                  <option value="" disabled>
+                    Seleccione un rol
+                  </option>
                   <option value="usuario">Usuario</option>
                   <option value="admin">Administrador</option>
                 </select>
               </div>
               <button type="submit" className="btn btn-primary" id="btnGeneral">
-                <FaRegFloppyDisk style={{ marginRight: "5px", marginTop: -3 }} /> Guardar
+                <FaRegFloppyDisk
+                  style={{ marginRight: "5px", marginTop: -3 }}
+                />{" "}
+                Guardar
               </button>
             </form>
           </div>
@@ -204,12 +265,15 @@ const Usuarios = () => {
               <th>Nombre completo</th>
               <th>Username</th>
               <th>Rol</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             {filasActuales.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center">No hay usuarios</td>
+                <td colSpan={4} className="text-center">
+                  No hay usuarios
+                </td>
               </tr>
             ) : (
               filasActuales.map((u, index) => (
@@ -218,7 +282,16 @@ const Usuarios = () => {
                   <td>{u.nombrecompleto || "Sin nombre"}</td>
                   <td>{u.username || "Sin usuario"}</td>
                   <td>{u.rol || "Sin rol"}</td>
-
+                  <td>
+                    <button
+                      type="button"
+                      title="Eliminar"
+                      className="btn btn-outline-danger btn-sm align-items-center justify-content-center w-100"
+                      onClick={() => u._id && eliminarUsuario(u._id)}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
@@ -239,7 +312,9 @@ const Usuarios = () => {
             {[...Array(totalPaginas)].map((_, i) => (
               <li
                 key={i}
-                className={`page-item ${paginaActual === i + 1 ? "active" : ""}`}
+                className={`page-item ${
+                  paginaActual === i + 1 ? "active" : ""
+                }`}
               >
                 <button
                   className="page-link"
@@ -249,7 +324,11 @@ const Usuarios = () => {
                 </button>
               </li>
             ))}
-            <li className={`page-item ${paginaActual === totalPaginas ? "disabled" : ""}`}>
+            <li
+              className={`page-item ${
+                paginaActual === totalPaginas ? "disabled" : ""
+              }`}
+            >
               <button
                 className="page-link"
                 onClick={() => setPaginaActual(paginaActual + 1)}

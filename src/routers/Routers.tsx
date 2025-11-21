@@ -1,24 +1,26 @@
-import { Routes, Route, useLocation } from "react-router-dom"
+import { Routes, Route, useLocation } from "react-router-dom";
 
 // Páginas
-import Dashboard from "../pages/Dashboard"
-import NuevaSolicitud from "../pages/nuevaSolicitud"
-import Registro from "../pages/Registro"
-import ListaSolicitudes from "../pages/ListaSolicitudes"
-import Prestamo from "../pages/Prestamo"
-import Usuarios from "../pages/Usuarios"
+import Dashboard from "../pages/Dashboard";
+import NuevaSolicitud from "../pages/nuevaSolicitud";
+import Registro from "../pages/Registro";
+import Prestamo from "../pages/Prestamo";
+import Usuarios from "../pages/Usuarios";
 
 // Componentes
-import Login from "../components/Login"
-import NavBar from "../components/NavBar"
-import Footer from "../components/Footer"  // 👈 Importamos el footer
-import Autorizacion from "../pages/Autorizacion"
+import Login from "../components/Login";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import Autorizacion from "../pages/Autorizacion";
+import { AdminRoute } from "../components/AdminRoute";
+import { apiFetch } from "../utils/apiFetch";
 
 const Routers = () => {
-  const location = useLocation()
+  const location = useLocation();
 
-  // Ocultar NavBar y Footer en login y root "/"
-  const hideLayout = location.pathname === "/" || location.pathname === "/login"
+  // Ocultar NavBar y Footer en login y "/"
+  const hideLayout =
+    location.pathname === "/" || location.pathname === "/login";
 
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -26,25 +28,58 @@ const Routers = () => {
 
       <main className="flex-grow-1">
         <Routes>
-          {/* Rutas de autenticación */}
+          {/* Login */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Rutas principales */}
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Rutas accesibles para todos */}
           <Route path="/nueva-solicitud" element={<NuevaSolicitud />} />
-          <Route path="/autorizacion" element={<Autorizacion />} />
           <Route path="/registro" element={<Registro />} />
-          <Route path="/lista-solicitudes" element={<ListaSolicitudes />} />
-          <Route path="/prestamos" element={<Prestamo actualizarResumen={() => fetch("http://localhost:3000/api/dashboard/resumen")} />} />
-          <Route path="/usuarios" element={<Usuarios />} />
+
+          <Route
+            path="/prestamos"
+            element={
+              <Prestamo
+                actualizarResumen={() =>
+                  apiFetch("/api/dashboard/resumen")
+                }
+              />
+            }
+          />
+
+          {/* Rutas SOLO admin */}
+          <Route
+            path="/dashboard"
+            element={
+              <AdminRoute>
+                <Dashboard />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/autorizacion"
+            element={
+              <AdminRoute>
+                <Autorizacion />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/usuarios"
+            element={
+              <AdminRoute>
+                <Usuarios />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </main>
-      <br />
 
       {!hideLayout && <Footer />}
     </div>
-  )
-}
+  );
+};
 
-export default Routers
+export default Routers;

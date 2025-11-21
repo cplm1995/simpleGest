@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle, FaUserCircle } from "react-icons/fa";
 import {
   FaArrowRightFromBracket,
-  FaFileCircleCheck,
   FaFilePen,
   FaHandHoldingHand,
   FaHouse,
@@ -77,65 +76,50 @@ const NavBar = () => {
             {/* Links */}
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav ms-auto align-items-center fw-semibold small">
-                
-                {/* Solo visible si el rol es admin */}
+                {/* MENÚ PARA ADMIN */}
+                {/* Si es admin, muestra TODO */}
                 {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard">
-                      <FaHouse className="me-1" /> Dashboard
-                    </Link>
-                  </li>
-                )}
+                  <>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/dashboard">
+                        <FaHouse className="me-1" /> Dashboard
+                      </Link>
+                    </li>
 
-                {/* Solo visible si el rol es admin */}
-                {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/lista-solicitudes">
-                      <FaFileCircleCheck className="me-1" /> Solicitudes
-                    </Link>
-                  </li>
-                )}
+                    
+                    {/* ESTE SIEMPRE aparece para cualquier usuario logueado */}
+                    {user && (
+                      <li className="nav-item">
+                        <Link className="nav-link" to="/nueva-solicitud">
+                          <FaFilePen className="me-1" /> Nueva Solicitud
+                        </Link>
+                      </li>
+                    )}
 
-                <li className="nav-item">
-                  <Link className="nav-link" to="/nueva-solicitud">
-                    <FaFilePen className="me-1" /> Nueva Solicitud
-                  </Link>
-                </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/autorizacion">
+                        <FaCheckCircle className="me-1" /> Autorización
+                      </Link>
+                    </li>
 
-                {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/autorizacion">
-                      <FaCheckCircle className="me-1" /> Autorización
-                    </Link>
-                  </li>
-                )}
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/registro">
+                        <FaPenToSquare className="me-1" /> Registro
+                      </Link>
+                    </li>
 
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/prestamos">
+                        <FaHandHoldingHand className="me-1" /> Préstamo
+                      </Link>
+                    </li>
 
-                {/*Solo visible si el rol es admin*/}
-                {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/registro">
-                      <FaPenToSquare className="me-1" /> Registro
-                    </Link>
-                  </li>
-                )}
-
-                {/*Solo visible si el rol es admin*/}
-                {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/prestamos">
-                      <FaHandHoldingHand className="me-1" /> Préstamo
-                    </Link>
-                  </li>
-                )}
-
-                {/* Solo visible si el rol es admin */}
-                {user?.rol === "admin" && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/usuarios">
-                      <FaUserGroup className="me-1" /> Usuarios
-                    </Link>
-                  </li>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/usuarios">
+                        <FaUserGroup className="me-1" /> Usuarios
+                      </Link>
+                    </li>
+                  </>
                 )}
 
                 {/* Usuario logueado */}

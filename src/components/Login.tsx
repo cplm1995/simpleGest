@@ -36,7 +36,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://simplegest.com:3000/api/auth/login",
+        "http://localhost:3000/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -85,7 +85,7 @@ const Login = () => {
     <>
       <div className="wrapper">
         <div className="login-container">
-          {/* 🧭 Panel Izquierdo */}
+          {/*  Panel Izquierdo */}
           <div className="left-panel">
             <div className="logo text-center">
               <img
@@ -98,7 +98,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* 🧩 Panel Derecho */}
+          {/*  Panel Derecho */}
           <div className="right-panel col-sm-6 text-center">
             <form
               className="login-form d-flex flex-column justify-content-center"
