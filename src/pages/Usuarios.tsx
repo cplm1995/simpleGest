@@ -222,7 +222,7 @@ const Usuarios = () => {
                     color: "blue",
                   }}
                 />
-                <label htmlFor="rol">Rol</label>
+                <label htmlFor="rol"></label>
                 <select
                   name="rol"
                   id="rol"

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaLock, FaRightToBracket, FaUser } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { apiFetch } from "../utils/apiFetch";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -21,7 +22,7 @@ const Login = () => {
     });
   };
 
-  // Quitar scroll solo en la pantalla de login
+  //  Quitar scroll solo en la pantalla de login
   useEffect(() => {
     document.body.classList.add("login-page");
     return () => {
@@ -29,39 +30,25 @@ const Login = () => {
     };
   }, []);
 
-  //,Manejar el inicio de sesión
+  // Manejar el inicio de sesión
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        }
-      );
+      const data = await apiFetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-      const data = await response.json();
-      console.log("🧩 Respuesta del backend:", data);
-
-      if (!response.ok) {
-        toast.error(data.message || "Usuario o contraseña incorrectos");
-        return;
-      }
-
-      // Verifica que el backend devuelva el usuario completo:
-      // { token, user: { id, nombrecompleto, username, rol } }
+      // Validación correcta
       if (!data.token || !data.user) {
         toast.error("Respuesta inválida del servidor");
         return;
       }
 
-      // Guardar token y usuario completo en localStorage
+      // Guardar info
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -69,13 +56,12 @@ const Login = () => {
         `Bienvenido ${data.user.nombrecompleto || data.user.username}!`
       );
 
-      // Redirigir al Dashboard
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 1500);
     } catch (error) {
-      console.error("❌ Error en login:", error);
-      toast.error("Error al conectar con el servidor");
+      console.error("Error en login:", error);
+      toast.error("Usuario o contraseña incorrectos");
     } finally {
       setLoading(false);
     }

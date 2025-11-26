@@ -26,11 +26,6 @@ interface Articulo {
   descripcion?: string;
 }
 
-interface Solicitante {
-  nombreSolicitante: string;
-  areaSolicitante: string;
-}
-
 interface Solicitud {
   hayMaterial: any;
   _id: string;
@@ -39,15 +34,8 @@ interface Solicitud {
   fechaSolicitud: string;
   materiales: Material[];
   estado: "En revisión" | "Aprobado" | "Entregado";
-}
-
-interface Servicio {
-  _id: string;
-  fechaSolicitud?: string;
   servicios?: string[];
   descripcionProblema?: string;
-  solicitante: Solicitante;
-  materiales: Material[];
 }
 
 const Autorizacion: React.FC = () => {
@@ -358,7 +346,7 @@ const Autorizacion: React.FC = () => {
                       <label style={{ marginRight: 4 }}>No</label>
                       <input
                         type="checkbox"
-                        disabled={s.estado === "Entregado"}
+                        disabled={s.estado === "Aprobado" || s.estado === "Entregado"}
                         checked={m.hayMaterial === false}
                         onChange={() => actualizarHayMaterial(s._id, i, false)}
                       />
@@ -367,7 +355,7 @@ const Autorizacion: React.FC = () => {
                       </label>
                       <input
                         type="checkbox"
-                        disabled={s.estado === "Entregado"}
+                        disabled={s.estado === "Aprobado" || s.estado === "Entregado"}
                         checked={m.hayMaterial === true}
                         onChange={() => actualizarHayMaterial(s._id, i, true)}
                       />

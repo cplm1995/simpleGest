@@ -2,7 +2,7 @@ export async function apiFetch<T = any>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL || "";
 
   // Asegura que SIEMPRE empiece con /api
   const finalEndpoint = endpoint.startsWith("/api")

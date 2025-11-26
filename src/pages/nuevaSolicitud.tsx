@@ -91,6 +91,15 @@ const NuevaSolicitud = () => {
     toast.error(`eliminado a la lista`);
   };
 
+  // Limpiar campos de material
+  const limpiarCamposMaterial = () => {
+    setDatosMateriales({
+      codigoArticulo: "",
+      material: "",
+      descripcion: "",
+      cantidad: 0,
+    });
+  };
   // Datos solicitante
   const [datosSolicitante, setDatosSolicitante] = useState({
     areaSolicitante: "",
@@ -115,22 +124,29 @@ const NuevaSolicitud = () => {
     descripcionProblema: "",
   });
 
-  // Chekbox
-  const handleCheckboxChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const { value, checked } = e.target;
-    setServiciosSolicitados((prev) => {
-      if (checked) {
-        return { ...prev, servicios: [...prev.servicios, value] };
-      } else {
-        return {
-          ...prev,
-          servicios: prev.servicios.filter((servicio) => servicio !== value),
-        };
-      }
-    });
+  // Checkbox para servicios
+  const handleServiciosChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value } = e.target;
+    const { name } = e.target;
+
+    const target = e.target as HTMLInputElement; // Cast to HTMLInputElement
+
+    if (target.type === "checkbox") {
+      setServiciosSolicitados((prev) => ({
+        ...prev,
+        servicios: target.checked
+          ? [...prev.servicios, value]
+          : prev.servicios.filter((servicio) => servicio !== value), // Use target.checked
+      }));
+    } else {
+      // Para textareas o inputs de texto como 'cual' o 'descripcionProblema'
+      setServiciosSolicitados((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
+
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -160,16 +176,13 @@ const NuevaSolicitud = () => {
     };
 
     try {
-      const response = await apiFetch("/api/solicitudes", {
+      await apiFetch("/api/solicitudes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(datosFormulario),
       });
-
-      // No hacer response.json(), apiFetch ya devuelve JSON
-      // const data = await response.json();
 
       toast.success("Datos guardados correctamente");
 
@@ -191,6 +204,7 @@ const NuevaSolicitud = () => {
         descripcionProblema: "",
       });
       setListaMateriales([]);
+      limpiarCamposMaterial();
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       toast.error("Error al guardar los datos");
@@ -365,7 +379,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Mantenimiento"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -383,7 +397,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Reparación"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -401,7 +415,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Adecuación"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -421,7 +435,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Electrico"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -439,7 +453,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Plomeria"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -457,7 +471,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Albanil"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -477,7 +491,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Pintura"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -495,7 +509,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Cerrajeria"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -513,7 +527,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Carpinteria"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -536,7 +550,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "Aire acondicionado"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -557,7 +571,7 @@ const NuevaSolicitud = () => {
                       checked={serviciosSolicitados.servicios.includes(
                         "otroSolicitado"
                       )}
-                      onChange={handleCheckboxChange}
+                      onChange={handleServiciosChange}
                     />
                   </div>
                 </div>
@@ -574,12 +588,7 @@ const NuevaSolicitud = () => {
                         id="cual"
                         name="cual"
                         value={serviciosSolicitados.cual}
-                        onChange={(e) =>
-                          setServiciosSolicitados({
-                            ...serviciosSolicitados,
-                            cual: e.target.value,
-                          })
-                        }
+                        onChange={handleServiciosChange}
                       />
                     </div>
                   </div>
@@ -599,12 +608,7 @@ const NuevaSolicitud = () => {
                   id="descripcionProblema"
                   name="descripcionProblema"
                   value={serviciosSolicitados.descripcionProblema}
-                  onChange={(e) =>
-                    setServiciosSolicitados({
-                      ...serviciosSolicitados,
-                      descripcionProblema: e.target.value,
-                    })
-                  }
+                  onChange={handleServiciosChange}
                   rows={3}
                 ></textarea>
               </div>
@@ -688,8 +692,8 @@ const NuevaSolicitud = () => {
                         setDatosMateriales({
                           ...datosMateriales,
                           codigoArticulo: option ? option.value : "",
-                          material: selected ? selected.nombreArticulo : "",
-                          descripcion: selected ? selected.descripcion : "",
+                          material: selected?.nombreArticulo ?? "", // Asegúrate de que nombreArticulo no sea undefined
+                          descripcion: selected?.descripcion ?? "",
                         });
                       }}
                       placeholder="Escriba para buscar..."
