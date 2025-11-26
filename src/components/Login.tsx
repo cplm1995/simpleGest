@@ -14,7 +14,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // Manejar cambios en los inputs
+  //  Manejar cambios en los inputs
   const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
@@ -30,7 +30,7 @@ const Login = () => {
     };
   }, []);
 
-  // Manejar el inicio de sesión
+  //  Manejar el inicio de sesión
   const handleSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -60,7 +60,7 @@ const Login = () => {
         window.location.href = "/dashboard";
       }, 1500);
     } catch (error) {
-      console.error("Error en login:", error);
+      console.error(" Error en login:", error);
       toast.error("Usuario o contraseña incorrectos");
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/*  Panel Derecho */}
+          {/* Panel Derecho */}
           <div className="right-panel col-sm-6 text-center">
             <form
               className="login-form d-flex flex-column justify-content-center"
