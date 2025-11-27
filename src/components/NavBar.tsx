@@ -86,7 +86,6 @@ const NavBar = () => {
                       </Link>
                     </li>
 
-                    
                     {/* ESTE SIEMPRE aparece para cualquier usuario logueado */}
                     {user && (
                       <li className="nav-item">
@@ -124,28 +123,38 @@ const NavBar = () => {
 
                 {/* Usuario logueado */}
                 {user && (
-                  <li className="nav-item ms-3 text-white d-flex flex-column align-items-center">
-                    <FaUserCircle size={22} />
-                    <span className="small text-center">
-                      {user.nombrecompleto || user.username}
-                      <br />
-                      <span className="badge bg-light text-dark">
-                        {user.rol}
+                  <li className="nav-item dropdown">
+                    <a
+                      className="nav-link dropdown-toggle d-flex align-items-center"
+                      href="#"
+                      id="userDropdown"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <FaUserCircle size={20} className="me-2" />
+                      <span className="fw-semibold small">
+                        {user.nombrecompleto || user.username}
                       </span>
-                    </span>
+                    </a>
+
+                    <ul className="dropdown-menu dropdown-menu-end">
+                      <li className="dropdown-item text-muted small">
+                        Rol: <strong>{user.rol}</strong>
+                      </li>
+
+                      <li>
+                        <button
+                          className="dropdown-item text-danger"
+                          onClick={handleLogout}
+                        >
+                          <FaArrowRightFromBracket className="me-2" />
+                          Salir
+                        </button>
+                      </li>
+                    </ul>
                   </li>
                 )}
-
-                {/* Botón salir */}
-                <li className="nav-item ms-3">
-                  <button
-                    className="btn btn-danger btn-sm"
-                    id="logoutButton"
-                    onClick={handleLogout}
-                  >
-                    <FaArrowRightFromBracket className="me-1" /> Salir
-                  </button>
-                </li>
               </ul>
             </div>
           </div>
