@@ -307,49 +307,51 @@ const Registro = () => {
         </div>
 
         {/* Tabla */}
-        <table className="table table-responsive table-striped mt-4 text-center">
-          <thead className="table-dark">
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Tipo</th>
-              <th>Stock</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filasActuales.length === 0 ? (
+        <div className="table-responsive mt-4">
+          <table className="table table-striped mt-4 text-center">
+            <thead className="table-dark">
               <tr>
-                <td colSpan={6}>No hay artículos</td>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+                <th>Stock</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              filasActuales.map((articulo, idx) => (
-                <tr key={idx}>
-                  <td>{articulo.codigoArticulo}</td>
-                  <td>{articulo.nombreArticulo}</td>
-                  <td>{articulo.descripcion}</td>
-                  <td>{articulo.tipoRegistro}</td>
-                  <td>{articulo.stock}</td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-warning me-2"
-                      onClick={() => handleEditar(articulo)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => handleEliminar(articulo._id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+            </thead>
+            <tbody>
+              {filasActuales.length === 0 ? (
+                <tr>
+                  <td colSpan={6}>No hay artículos</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filasActuales.map((articulo, idx) => (
+                  <tr key={idx}>
+                    <td>{articulo.codigoArticulo}</td>
+                    <td>{articulo.nombreArticulo}</td>
+                    <td>{articulo.descripcion}</td>
+                    <td>{articulo.tipoRegistro}</td>
+                    <td>{articulo.stock}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-warning me-2"
+                        onClick={() => handleEditar(articulo)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn btn-sm btn-danger"
+                        onClick={() => handleEliminar(articulo._id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Paginación */}
         <nav>

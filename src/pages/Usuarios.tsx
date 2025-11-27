@@ -258,45 +258,48 @@ const Usuarios = () => {
         />
 
         {/* Tabla de usuarios */}
-        <table className="table table-hover table-responsive mt-5">
-          <thead className="table-dark text-start">
-            <tr>
-              <th>#</th>
-              <th>Nombre completo</th>
-              <th>Username</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filasActuales.length === 0 ? (
+        {/* Tabla responsiva */}
+        <div className="table-responsive mt-4">
+          <table className="table table-hover align-middle">
+            <thead className="table-dark text-start">
               <tr>
-                <td colSpan={4} className="text-center">
-                  No hay usuarios
-                </td>
+                <th>#</th>
+                <th>Nombre completo</th>
+                <th>Username</th>
+                <th>Rol</th>
+                <th>Acciones</th>
               </tr>
-            ) : (
-              filasActuales.map((u, index) => (
-                <tr key={u._id || index}>
-                  <td>{index + 1}</td>
-                  <td>{u.nombrecompleto || "Sin nombre"}</td>
-                  <td>{u.username || "Sin usuario"}</td>
-                  <td>{u.rol || "Sin rol"}</td>
-                  <td>
-                    <button
-                      type="button"
-                      title="Eliminar"
-                      className="btn btn-outline-danger btn-sm align-items-center justify-content-center w-100"
-                      onClick={() => u._id && eliminarUsuario(u._id)}
-                    >
-                      <FaTrashAlt />
-                    </button>
+            </thead>
+            <tbody>
+              {filasActuales.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center">
+                    No hay usuarios
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filasActuales.map((u, index) => (
+                  <tr key={u._id || index}>
+                    <td>{index + 1}</td>
+                    <td>{u.nombrecompleto}</td>
+                    <td>{u.username}</td>
+                    <td>{u.rol}</td>
+                    <td>
+                      <button
+                        type="button"
+                        title="Eliminar"
+                        className="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center"
+                        onClick={() => u._id && eliminarUsuario(u._id)}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Paginación */}
         <nav>
