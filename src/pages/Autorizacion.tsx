@@ -140,16 +140,61 @@ const Autorizacion: React.FC = () => {
     try {
       const { solicitudId, index, cantidad } = materialEditando;
 
+      const solicitud = solicitudes.find((s) => s._id === solicitudId);
+      if (!solicitud) {
+        toast.error("Solicitud no encontrada");
+        return;
+      }
+
+      const material = solicitud.materiales[index];
+      if (!material) {
+        toast.error("Material no encontrado");
+        return;
+      }
+
+      // Actualizar cantidad en backend
+      const nuevaCantidad = materialEditando.cantidad;
+
+      // Llamada a la API para actualizar la cantidad
+      const articuloId =
+        typeof material.codigoArticulo === "string"
+          ? material.codigoArticulo
+          : material.codigoArticulo?._id;
+
+      const articulo = articulosDB.find((a) => a._id === articuloId);
+      if (!articulo) {
+        toast.error("Artículo no encontrado");
+        return;
+      }
+
+      const diferencia = nuevaCantidad - material.cantidad;
+
+      if (articulo.stock < diferencia) {
+        toast.error("No hay suficiente stock disponible para esta modificación");
+        return;
+      }
+
+      // Actualizar stock del artículo
+      await apiFetch(`/api/articulos/${articulo._id}/stock`, {
+        method: "PUT",
+        body: JSON.stringify({ 
+          stock: articulo.stock - diferencia,
+        }),
+      });
+
+      // Actualizar cantidad en la solicitud
       await apiFetch(`/api/solicitudes/${solicitudId}/materiales/${index}`, {
         method: "PUT",
         body: JSON.stringify({ cantidad }),
       });
 
-      toast.success("Cantidad actualizada");
+      toast.success("Cantidad editad y stock actualizado");
       setMaterialEditando(null);
+      obtenerArticulos();
       obtenerSolicitudes();
     } catch (error: any) {
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Error al guardar la cantidad");
     }
   };
 
@@ -273,7 +318,6 @@ const Autorizacion: React.FC = () => {
       )}
       <br />
       <hr />
-
       {/* Buscador */}
       <div className="mb-3">
         <input
@@ -287,7 +331,7 @@ const Autorizacion: React.FC = () => {
       <hr />
 
       {/* TABLA */}
-      <table className="table table-bordered table-striped text-center align-middle">
+      <table className="table table-bordered table-striped text-center align-middle mt-5">
         <thead className="table-primary">
           <tr>
             <th>N°</th>

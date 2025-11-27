@@ -69,14 +69,13 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="container mt-5 dashboard-background">
+      <div className="container-sm mt-1 dashboard-background">
         {/*Bienvenida al usuario logeado */}
         {user && (
-          <div className="alert alert-info mb-3 text-center">
+          <div className="alert alert-primary mb-5 text-center" role="alert" >
             Bienvenido<b style={{ marginLeft: 10 }}>{user.nombrecompleto}</b>
           </div>
         )}
-
         <div className="row text-center g-3">
           <div className="col-md-3 mb-3">
             <div className="card shadow-sm" style={{ border: "none" }}>

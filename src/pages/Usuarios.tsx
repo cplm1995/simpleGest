@@ -150,8 +150,7 @@ const Usuarios = () => {
 
   return (
     <>
-      <div className="container mt-5">
-        <h1>Bienvenidos al módulo de usuario</h1>
+      <div className="container-sm mt-5">
         <div className="card">
           <div className="card-body">
             <div className="card-header">Ingreso nuevo usuario</div>
@@ -257,11 +256,10 @@ const Usuarios = () => {
           value={busqueda}
         />
 
-        {/* Tabla de usuarios */}
         {/* Tabla responsiva */}
         <div className="table-responsive mt-4">
           <table className="table table-hover align-middle">
-            <thead className="table-dark text-start">
+            <thead className="table-dark text-center">
               <tr>
                 <th>#</th>
                 <th>Nombre completo</th>
@@ -270,7 +268,7 @@ const Usuarios = () => {
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-center">
               {filasActuales.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center">
@@ -288,7 +286,7 @@ const Usuarios = () => {
                       <button
                         type="button"
                         title="Eliminar"
-                        className="btn btn-outline-danger btn-sm d-flex align-items-center justify-content-center"
+                        className="btn btn-outline-danger btn-sm d-flex align-items-start justify-content-start mx-auto"
                         onClick={() => u._id && eliminarUsuario(u._id)}
                       >
                         <FaTrashAlt />

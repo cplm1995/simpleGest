@@ -17,7 +17,12 @@ const NuevaSolicitud = () => {
     }[]
   >([]);
   const [listaMateriales, setListaMateriales] = useState<
-    { codigoArticulo: string; material: string; cantidad: number }[]
+    {
+      descripcion: string;
+      codigoArticulo: string;
+      material: string;
+      cantidad: number;
+    }[]
   >([]);
 
   const [datosMateriales, setDatosMateriales] = useState({
@@ -49,19 +54,29 @@ const NuevaSolicitud = () => {
 
   // Agregar material
   const handleAgregarMaterial = () => {
-    const { codigoArticulo, material, cantidad } = datosMateriales;
+    const { material, cantidad } = datosMateriales;
 
     if (!material || !cantidad) {
       toast.error("Debe escribir un material y una cantidad");
       return;
     }
 
-    // Buscar por ID o por nombre
-    const articuloDB =
-      articulosDB.find((a) => a._id === codigoArticulo) ||
-      articulosDB.find(
-        (a) => a.nombreArticulo.toLowerCase() === material.toLowerCase().trim()
+    const texto = material.toLowerCase().trim();
+
+    // Buscar coincidencia en inventario
+    const articuloDB = articulosDB.find((a) => {
+      const nombre = a.nombreArticulo.toLowerCase().trim();
+      const descripcion = a.descripcion?.toLowerCase().trim() || "";
+      const nombreCompleto = `${nombre} ${descripcion}`.trim();
+
+      return (
+        nombre.includes(texto) ||
+        descripcion.includes(texto) ||
+        nombreCompleto.includes(texto)
       );
+    });
+
+    console.log("Artículo encontrado:", articuloDB);
 
     if (!articuloDB) {
       toast.error("Material no encontrado en inventario");
@@ -75,15 +90,23 @@ const NuevaSolicitud = () => {
 
     const nuevoMaterial = {
       codigoArticulo: articuloDB._id,
-      material: articuloDB.nombreArticulo,
+      material: `${articuloDB.nombreArticulo} - ${articuloDB.descripcion}`,
       descripcion: articuloDB.descripcion || "",
       cantidad,
     };
 
     setListaMateriales([...listaMateriales, nuevoMaterial]);
-    setDatosMateriales({ codigoArticulo: "", material: "", descripcion: "", cantidad: 0 });
+
+    setDatosMateriales({
+      codigoArticulo: "",
+      material: "",
+      descripcion: "",
+      cantidad: 0,
+    });
+
     toast.success(`${articuloDB.nombreArticulo} agregado a la lista`);
   };
+
   // Eliminar material
   const handleEliminarMaterial = (index: number) => {
     const nuevaLista = listaMateriales.filter((_, i) => i !== index);
@@ -125,7 +148,9 @@ const NuevaSolicitud = () => {
   });
 
   // Checkbox para servicios
-  const handleServiciosChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleServiciosChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { value } = e.target;
     const { name } = e.target;
 
@@ -146,7 +171,6 @@ const NuevaSolicitud = () => {
       }));
     }
   };
-
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -632,26 +656,35 @@ const NuevaSolicitud = () => {
                       title="Buscar"
                       value={datosMateriales.material}
                       onChange={(e) => {
-                        const texto = e.target.value;
+                        const texto = e.target.value.toLocaleLowerCase().trim();
 
                         // Guarda lo que el usuario escribe
                         setDatosMateriales({
                           ...datosMateriales,
-                          material: texto,
-                          codigoArticulo: "", // se llenará automáticamente si coincide el nombre
+                          material: e.target.value,
+                          descripcion: "",
+                          codigoArticulo: "",
                         });
 
                         // Buscar coincidencia exacta por nombre
-                        const articulo = articulosDB.find(
-                          (a) =>
-                            a.nombreArticulo.toLowerCase() ===
-                            texto.toLowerCase().trim()
-                        );
+                        const articulo = articulosDB.find((a) =>{
+                          const nombre = a.nombreArticulo.toLocaleLowerCase().trim();
+                          const descripcion = a.descripcion?.toLocaleLowerCase().trim() || "";
+                          const nombreCompleto = `${nombre} ${descripcion}`.trim();
 
+                          return (
+                            nombre === texto ||
+                            descripcion === texto ||
+                            nombreCompleto === texto
+                          );
+                        }
+                        );
+                        console.log("Articulo buscado:", articulo);
                         if (articulo) {
                           setDatosMateriales((prev) => ({
                             ...prev,
                             codigoArticulo: articulo._id,
+                            descripcion: articulo.descripcion || "",
                           }));
                         }
                       }}
@@ -744,6 +777,7 @@ const NuevaSolicitud = () => {
                   <tr>
                     <th>Material</th>
                     <th>Cantidad</th>
+                    <th className="no-print">Descripción</th>
                     <th className="no-print">Acciones</th>
                   </tr>
                 </thead>
@@ -752,6 +786,7 @@ const NuevaSolicitud = () => {
                     <tr key={index}>
                       <td>{item.material}</td>
                       <td>{item.cantidad}</td>
+                      <td className="no-print">{item.descripcion}</td>
                       <td className="no-print">
                         <button
                           type="button"

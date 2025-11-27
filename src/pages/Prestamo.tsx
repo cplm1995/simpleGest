@@ -170,9 +170,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
 
   return (
     <>
-      <div className="container mt-5 text-center">
-        <h1>Préstamos</h1>
-        <hr />
+      <div className="container-sm mt-5 text-center">
 
         {/* Formulario */}
         <div className="card">
@@ -194,6 +192,8 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       name="codigoPrestamo"
                       value={prestamo.codigoPrestamo}
                       onChange={datosPrestamoChange}
+                      required
+                      placeholder="Ejemplo: M001"
                     />
                   </div>
                   <div className="col-sm-4">
@@ -204,6 +204,9 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       name="articulo"
                       className="form-control mt-2"
                       id="articulo"
+                      type="text"
+                      required
+                      placeholder="Ejemplo: Monitor LG 24''"
                     />
                   </div>
                   <div className="col-sm-4">
@@ -215,6 +218,8 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       name="cantidad"
                       className="form-control mt-2"
                       id="cantidad"
+                      required
+                      placeholder="Cantidad"
                     />
                   </div>
                 </div>
@@ -230,6 +235,7 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       name="fechaPrestamo"
                       value={prestamo.fechaPrestamo}
                       onChange={datosPrestamoChange}
+                      required
                     />
                   </div>
                   <div className="col-sm-4">
@@ -243,6 +249,8 @@ const Prestamo: React.FC<{ actualizarResumen?: () => void }> = ({
                       name="nombre"
                       value={prestamo.nombre}
                       onChange={datosPrestamoChange}
+                      required
+                      placeholder="Ejemplo: Juan Pérez"
                     />
                   </div>
                 </div>

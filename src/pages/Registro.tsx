@@ -185,8 +185,7 @@ const Registro = () => {
 
   return (
     <>
-      <div className="container mt-5">
-        <h1>Registro</h1>
+      <div className="container-sm mt-5">
         {/*Formulario */}
         <form onSubmit={handleGuardarDatos}>
           <div className="card">
@@ -207,7 +206,7 @@ const Registro = () => {
                     }}
                     required
                   >
-                    <option value="">[Seleccione]</option>
+                    <option value="" disabled>[Seleccione]</option>
                     <option value="Material">Material</option>
                     <option value="Herramienta">Herramienta</option>
                   </select>
@@ -224,6 +223,7 @@ const Registro = () => {
                     value={datosRegistro.codigoArticulo}
                     onChange={datosRegistroArticulosChange}
                     required
+                    placeholder="Ejemplo B001"
                   />
                 </div>
                 <div className="col-sm-4">
@@ -238,13 +238,14 @@ const Registro = () => {
                     value={datosRegistro.nombreArticulo}
                     onChange={datosRegistroArticulosChange}
                     required
+                    placeholder="Ejemplo: Martillo"
                   />
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-sm-4">
                   <label htmlFor="descripcion" className="form-label">
-                    Descripción
+                    Descripción <span className="text-danger">*</span>
                   </label>
                   <input
                     id="descripcion"
@@ -253,6 +254,8 @@ const Registro = () => {
                     name="descripcion"
                     value={datosRegistro.descripcion}
                     onChange={datosRegistroArticulosChange}
+                    required
+                    placeholder="Descripción del artículo"
                   />
                 </div>
                 <div className="col-sm-4">
@@ -267,6 +270,7 @@ const Registro = () => {
                     value={datosRegistro.stock}
                     onChange={datosRegistroArticulosChange}
                     required
+                    placeholder="Ingrese una cantidad"
                   />
                 </div>
               </div>
