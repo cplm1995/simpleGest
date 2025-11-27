@@ -14,6 +14,7 @@ import { apiFetch } from "../utils/apiFetch";
 interface Material {
   hayMaterial: boolean;
   nombreArticulo: any;
+  descripcion?: string;
   codigoArticulo: Articulo | null;
   cantidad: number;
 }
@@ -293,6 +294,7 @@ const Autorizacion: React.FC = () => {
             <th>Solicitante</th>
             <th>Área</th>
             <th>Artículos</th>
+            <th>Descripción</th>
             <th>Cantidad</th>
             <th>Opciones</th>
             <th>Editar</th>
@@ -324,6 +326,16 @@ const Autorizacion: React.FC = () => {
                     </div>
                   ))}
                 </td>
+                {/* Descripción */}
+                <td>
+                  {s.materiales.map((m, i) => {
+                    const descripcion =
+                      typeof m.codigoArticulo === "object"
+                        ? m.codigoArticulo?.descripcion
+                        : "—";
+                    return <div key={i}>{descripcion || "—"}</div>;
+                  })}
+                </td>
 
                 {/* Cantidades */}
                 <td>
@@ -346,7 +358,9 @@ const Autorizacion: React.FC = () => {
                       <label style={{ marginRight: 4 }}>No</label>
                       <input
                         type="checkbox"
-                        disabled={s.estado === "Aprobado" || s.estado === "Entregado"}
+                        disabled={
+                          s.estado === "Aprobado" || s.estado === "Entregado"
+                        }
                         checked={m.hayMaterial === false}
                         onChange={() => actualizarHayMaterial(s._id, i, false)}
                       />
@@ -355,7 +369,9 @@ const Autorizacion: React.FC = () => {
                       </label>
                       <input
                         type="checkbox"
-                        disabled={s.estado === "Aprobado" || s.estado === "Entregado"}
+                        disabled={
+                          s.estado === "Aprobado" || s.estado === "Entregado"
+                        }
                         checked={m.hayMaterial === true}
                         onChange={() => actualizarHayMaterial(s._id, i, true)}
                       />
