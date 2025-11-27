@@ -354,14 +354,22 @@ const Registro = () => {
         </div>
 
         {/* Paginación */}
-        <nav>
-          <ul className="pagination justify-content-start">
+        <nav className="d-flex justify-content-center mt-3">
+          <ul
+            className="pagination pagination-sm flex-wrap"
+            style={{
+              overflowX: "auto",
+              whiteSpace: "nowrap",
+              maxWidth: "100%",
+              paddingBottom: "5px",
+            }}
+          >
             <li className={`page-item ${paginaActual === 1 ? "disabled" : ""}`}>
               <button
                 className="page-link"
                 onClick={() => setPaginaActual(paginaActual - 1)}
               >
-                Anterior
+                «
               </button>
             </li>
 
@@ -390,7 +398,7 @@ const Registro = () => {
                 className="page-link"
                 onClick={() => setPaginaActual(paginaActual + 1)}
               >
-                Siguiente
+                »
               </button>
             </li>
           </ul>
