@@ -1,8 +1,12 @@
+import ReporteAutorizaciones from "../components/ReporteAutorizaciones";
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaEdit, FaTruck } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { apiFetch } from "../utils/apiFetch";
+import { FaPrint } from "react-icons/fa6";
 
 /* interface Material {
     codigoArticulo: string | {
@@ -45,6 +49,22 @@ const Autorizacion: React.FC = () => {
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
   const filasPorPagina = 10;
+
+  // ---------------------------
+  // Imprimir
+  // ---------------------------
+  const componenteImprimirRef = useRef<HTMLDivElement>(null);
+  const imprimir = useReactToPrint({
+    contentRef: componenteImprimirRef,
+    documentTitle: "Reporte de Autorizaciones",
+  });
+
+  const handleImprimirClick = () => {
+    console.log("ref antes de imprimir:", componenteImprimirRef.current);
+    imprimir?.();
+  };
+
+  // ---------------------------
 
   // Editar material
   const [materialEditando, setMaterialEditando] = useState<{
@@ -170,14 +190,16 @@ const Autorizacion: React.FC = () => {
       const diferencia = nuevaCantidad - material.cantidad;
 
       if (articulo.stock < diferencia) {
-        toast.error("No hay suficiente stock disponible para esta modificación");
+        toast.error(
+          "No hay suficiente stock disponible para esta modificación"
+        );
         return;
       }
 
       // Actualizar stock del artículo
       await apiFetch(`/api/articulos/${articulo._id}/stock`, {
         method: "PUT",
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           stock: articulo.stock - diferencia,
         }),
       });
@@ -329,166 +351,194 @@ const Autorizacion: React.FC = () => {
         />
       </div>
       <hr />
+      <div style={{ display: "none" }}>
+        <ReporteAutorizaciones
+          ref={componenteImprimirRef}
+          autorizaciones={solicitudes}
+        />
+      </div>
+
+      {/*Botón de Imprimir*/}
+      <div className="d-flex justify-content-end">
+        <button
+          className="btn btn-outline-primary"
+          title="Imprimir"
+          onClick={handleImprimirClick}
+        >
+          <FaPrint className="" />
+          &nbsp; Imprimir reporte
+        </button>
+      </div>
 
       {/* TABLA */}
-      <table className="table table-bordered table-striped text-center align-middle mt-5">
-        <thead className="table-primary">
-          <tr>
-            <th>N°</th>
-            <th>Solicitante</th>
-            <th>Área</th>
-            <th>Artículos</th>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Opciones</th>
-            <th>Editar</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {solicitudes.length === 0 ? (
-            <tr>
-              <td colSpan={8}>No hay solicitudes registradas</td>
-            </tr>
-          ) : (
-            filasActuales.map((s) => (
-              <tr key={s._id}>
-                <td>{solicitudes.indexOf(s) + 1}</td>
-                <td>{s.nombreSolicitante}</td>
-                <td>{s.areaSolicitante}</td>
-
-                {/* Nombres de materiales */}
-                <td>
-                  {s.materiales.map((m, i) => (
-                    <div key={i}>
-                      {typeof m.codigoArticulo === "string"
-                        ? m.codigoArticulo
-                        : m.codigoArticulo?.nombreArticulo ?? "—"}
-                    </div>
-                  ))}
-                </td>
-                {/* Descripción */}
-                <td>
-                  {s.materiales.map((m, i) => {
-                    const descripcion =
-                      typeof m.codigoArticulo === "object"
-                        ? m.codigoArticulo?.descripcion
-                        : "—";
-                    return <div key={i}>{descripcion || "—"}</div>;
-                  })}
-                </td>
-
-                {/* Cantidades */}
-                <td>
-                  {s.materiales.map((m, i) => (
-                    <div key={i}>{m.cantidad}</div>
-                  ))}
-                </td>
-                {/* Opciones: por cada material un par de checkboxes */}
-                <td>
-                  {s.materiales.map((m, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        justifyContent: "center",
-                      }}
-                    >
-                      <label style={{ marginRight: 4 }}>No</label>
-                      <input
-                        type="checkbox"
-                        disabled={
-                          s.estado === "Aprobado" || s.estado === "Entregado"
-                        }
-                        checked={m.hayMaterial === false}
-                        onChange={() => actualizarHayMaterial(s._id, i, false)}
-                      />
-                      <label style={{ marginLeft: 8, marginRight: 4 }}>
-                        Si
-                      </label>
-                      <input
-                        type="checkbox"
-                        disabled={
-                          s.estado === "Aprobado" || s.estado === "Entregado"
-                        }
-                        checked={m.hayMaterial === true}
-                        onChange={() => actualizarHayMaterial(s._id, i, true)}
-                      />
-                    </div>
-                  ))}
-                </td>
-
-                {/* Botón editar por material */}
-                <td>
-                  {s.materiales.map((m, i) => (
-                    <div key={i}>
-                      <button
-                        className="btn btn-sm btn-outline-primary mb-1"
-                        disabled={s.estado !== "En revisión"}
-                        title={
-                          s.estado !== "En revisión"
-                            ? "En revisión"
-                            : "Entregado"
-                        }
-                        onClick={() =>
-                          setMaterialEditando({
-                            solicitudId: s._id,
-                            index: i,
-                            cantidad: m.cantidad,
-                          })
-                        }
-                      >
-                        <FaEdit className="btn-sm" />
-                      </button>
-                    </div>
-                  ))}
-                </td>
-
-                <td>{new Date(s.fechaSolicitud).toLocaleDateString()}</td>
-
-                <td>
-                  <span
-                    className={`badge ${
-                      s.estado === "Aprobado"
-                        ? "bg-success"
-                        : s.estado === "Entregado"
-                        ? "bg-secondary"
-                        : "bg-warning text-dark"
-                    }`}
-                  >
-                    {s.estado}
-                  </span>
-                </td>
-
-                <td>
-                  {s.estado === "En revisión" && (
-                    <button
-                      className="btn btn-success btn-sm me-2"
-                      onClick={() => cambiarEstado(s._id, "Aprobado")}
-                    >
-                      <FaCheckCircle className="me-1" /> Aprobar
-                    </button>
-                  )}
-
-                  {s.estado === "Aprobado" && (
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => cambiarEstado(s._id, "Entregado")}
-                    >
-                      <FaTruck className="me-1" /> Marcar entregado
-                    </button>
-                  )}
-                </td>
+      <div>
+        <div className="table-resposive">
+          <table className="table table-bordered table-striped text-center align-middle mt-3">
+            <thead className="table-primary">
+              <tr>
+                <th>N°</th>
+                <th>Solicitante</th>
+                <th>Área</th>
+                <th>Artículos</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Opciones</th>
+                <th>Editar</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            </thead>
+
+            <tbody>
+              {solicitudes.length === 0 ? (
+                <tr>
+                  <td colSpan={8}>No hay solicitudes registradas</td>
+                </tr>
+              ) : (
+                filasActuales.map((s) => (
+                  <tr key={s._id}>
+                    <td>{solicitudes.indexOf(s) + 1}</td>
+                    <td>{s.nombreSolicitante}</td>
+                    <td>{s.areaSolicitante}</td>
+
+                    {/* Nombres de materiales */}
+                    <td>
+                      {s.materiales.map((m, i) => (
+                        <div key={i}>
+                          {typeof m.codigoArticulo === "string"
+                            ? m.codigoArticulo
+                            : m.codigoArticulo?.nombreArticulo ?? "—"}
+                        </div>
+                      ))}
+                    </td>
+                    {/* Descripción */}
+                    <td>
+                      {s.materiales.map((m, i) => {
+                        const descripcion =
+                          typeof m.codigoArticulo === "object"
+                            ? m.codigoArticulo?.descripcion
+                            : "—";
+                        return <div key={i}>{descripcion || "—"}</div>;
+                      })}
+                    </td>
+
+                    {/* Cantidades */}
+                    <td>
+                      {s.materiales.map((m, i) => (
+                        <div key={i}>{m.cantidad}</div>
+                      ))}
+                    </td>
+                    {/* Opciones: por cada material un par de checkboxes */}
+                    <td>
+                      {s.materiales.map((m, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <label style={{ marginRight: 4 }}>No</label>
+                          <input
+                            type="checkbox"
+                            disabled={
+                              s.estado === "Aprobado" ||
+                              s.estado === "Entregado"
+                            }
+                            checked={m.hayMaterial === false}
+                            onChange={() =>
+                              actualizarHayMaterial(s._id, i, false)
+                            }
+                          />
+                          <label style={{ marginLeft: 8, marginRight: 4 }}>
+                            Si
+                          </label>
+                          <input
+                            type="checkbox"
+                            disabled={
+                              s.estado === "Aprobado" ||
+                              s.estado === "Entregado"
+                            }
+                            checked={m.hayMaterial === true}
+                            onChange={() =>
+                              actualizarHayMaterial(s._id, i, true)
+                            }
+                          />
+                        </div>
+                      ))}
+                    </td>
+
+                    {/* Botón editar por material */}
+                    <td>
+                      {s.materiales.map((m, i) => (
+                        <div key={i}>
+                          <button
+                            className="btn btn-sm btn-outline-primary mb-1"
+                            disabled={s.estado !== "En revisión"}
+                            title={
+                              s.estado !== "En revisión"
+                                ? "En revisión"
+                                : "Entregado"
+                            }
+                            onClick={() =>
+                              setMaterialEditando({
+                                solicitudId: s._id,
+                                index: i,
+                                cantidad: m.cantidad,
+                              })
+                            }
+                          >
+                            <FaEdit className="btn-sm" />
+                          </button>
+                        </div>
+                      ))}
+                    </td>
+
+                    <td>{new Date(s.fechaSolicitud).toLocaleDateString()}</td>
+
+                    <td>
+                      <span
+                        className={`badge ${
+                          s.estado === "Aprobado"
+                            ? "bg-success"
+                            : s.estado === "Entregado"
+                            ? "bg-secondary"
+                            : "bg-warning text-dark"
+                        }`}
+                      >
+                        {s.estado}
+                      </span>
+                    </td>
+
+                    <td>
+                      {s.estado === "En revisión" && (
+                        <button
+                          className="btn btn-success btn-sm me-2"
+                          onClick={() => cambiarEstado(s._id, "Aprobado")}
+                        >
+                          <FaCheckCircle className="me-1" /> Aprobar
+                        </button>
+                      )}
+
+                      {s.estado === "Aprobado" && (
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => cambiarEstado(s._id, "Entregado")}
+                        >
+                          <FaTruck className="me-1" /> Marcar entregado
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Paginación */}
       <nav>
