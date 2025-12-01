@@ -323,7 +323,7 @@ const Registro = () => {
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody className="align-middle">
+            <tbody className="text-start">
               {filasActuales.length === 0 ? (
                 <tr>
                   <td colSpan={6}>No hay artículos</td>
