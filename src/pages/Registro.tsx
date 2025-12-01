@@ -312,7 +312,7 @@ const Registro = () => {
 
         {/* Tabla */}
         <div className="table-responsive mt-4">
-          <table className="table table-striped mt-4 text-center">
+          <table className="table table-striped mt-4 text-start">
             <thead className="table-dark">
               <tr>
                 <th>Código</th>
@@ -323,7 +323,7 @@ const Registro = () => {
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="align-middle">
               {filasActuales.length === 0 ? (
                 <tr>
                   <td colSpan={6}>No hay artículos</td>
