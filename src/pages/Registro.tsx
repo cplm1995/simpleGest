@@ -22,7 +22,7 @@ const Registro = () => {
 
   const [busqueda, setBusqueda] = useState("");
   const [paginaActual, setPaginaActual] = useState(1);
-  const filasPorPagina = 5;
+  const filasPorPagina = 10;
 
   //  Filtrar resultados
   const filtrados = articulos.filter((articulo) => {
