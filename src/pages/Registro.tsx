@@ -320,7 +320,7 @@ const Registro = () => {
                 <th>Descripción</th>
                 <th>Tipo</th>
                 <th>Stock</th>
-                <th>Acciones</th>
+                <th className="">Acciones</th>
               </tr>
             </thead>
             <tbody className="text-start">
