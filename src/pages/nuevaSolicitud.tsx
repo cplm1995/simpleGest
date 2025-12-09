@@ -130,7 +130,6 @@ const NuevaSolicitud = () => {
     torre: "",
     nombreSolicitante: "",
     piso: "",
-    telefono: "",
     espacio: "",
     sedeAlterna: "",
     cualServicio: "",
@@ -218,7 +217,6 @@ const NuevaSolicitud = () => {
         torre: "",
         nombreSolicitante: "",
         piso: "",
-        telefono: "",
         espacio: "",
         sedeAlterna: "",
         cualServicio: "",
@@ -327,7 +325,7 @@ const NuevaSolicitud = () => {
                   />
                 </div>
                 <div className="col-sm-4">
-                  <label htmlFor="telefono" className="form-label">
+                  <label htmlFor="piso" className="form-label">
                     Teléfono <span className="text-danger">*</span>
                   </label>
                   <input
@@ -394,7 +392,7 @@ const NuevaSolicitud = () => {
                       className="form-control mb-1"
                       id="cualServicio"
                       name="cualServicio"
-                      placeholder="Cual Servicio?"
+                      placeholder="CualServicio?"
                       value={datosSolicitante.cualServicio}
                       onChange={datosSolicitanteChange}
                     />
@@ -684,21 +682,18 @@ const NuevaSolicitud = () => {
                         });
 
                         // Buscar coincidencia exacta por nombre
-                        const articulo = articulosDB.find((a) => {
-                          const nombre = a.nombreArticulo
-                            .toLocaleLowerCase()
-                            .trim();
-                          const descripcion =
-                            a.descripcion?.toLocaleLowerCase().trim() || "";
-                          const nombreCompleto =
-                            `${nombre} ${descripcion}`.trim();
+                        const articulo = articulosDB.find((a) =>{
+                          const nombre = a.nombreArticulo.toLocaleLowerCase().trim();
+                          const descripcion = a.descripcion?.toLocaleLowerCase().trim() || "";
+                          const nombreCompleto = `${nombre} ${descripcion}`.trim();
 
                           return (
                             nombre === texto ||
                             descripcion === texto ||
                             nombreCompleto === texto
                           );
-                        });
+                        }
+                        );
                         console.log("Articulo buscado:", articulo);
                         if (articulo) {
                           setDatosMateriales((prev) => ({
