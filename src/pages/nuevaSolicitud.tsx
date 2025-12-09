@@ -130,6 +130,7 @@ const NuevaSolicitud = () => {
     torre: "",
     nombreSolicitante: "",
     piso: "",
+    telefono: "",
     espacio: "",
     sedeAlterna: "",
     cualServicio: "",
@@ -217,6 +218,7 @@ const NuevaSolicitud = () => {
         torre: "",
         nombreSolicitante: "",
         piso: "",
+        telefono: "",
         espacio: "",
         sedeAlterna: "",
         cualServicio: "",
@@ -247,6 +249,7 @@ const NuevaSolicitud = () => {
             <form onSubmit={guardarDatosSolicitante}>
               {/* Datos del solicitante */}
               <div className="row">
+                {/* Area solicitante */}
                 <div className="col-sm-4">
                   <label htmlFor="areaSolicitante" className="form-label">
                     Aréa o centro solicitante{" "}
@@ -263,6 +266,7 @@ const NuevaSolicitud = () => {
                     onChange={datosSolicitanteChange}
                   />
                 </div>
+                {/* Fecha de solicitud */}
                 <div className="col-sm-4">
                   <label htmlFor="fechaSolicitud" className="form-label">
                     Fecha de Solicitud <span className="text-danger">*</span>
@@ -277,6 +281,7 @@ const NuevaSolicitud = () => {
                     onChange={datosSolicitanteChange}
                   />
                 </div>
+                {/* Torre */}
                 <div className="col-sm-4">
                   <label htmlFor="torre" className="form-label">
                     Torre <span className="text-danger">*</span>
@@ -293,6 +298,7 @@ const NuevaSolicitud = () => {
                   />
                 </div>
               </div>
+              {/* Datos del solicitante - nombre solicitante */}
               <div className="row mt-3">
                 <div className="col-sm-4">
                   <label htmlFor="nombreSolicitante" className="form-label">
@@ -309,6 +315,7 @@ const NuevaSolicitud = () => {
                     onChange={datosSolicitanteChange}
                   />
                 </div>
+                {/* Piso */}
                 <div className="col-sm-4">
                   <label htmlFor="piso" className="form-label">
                     Piso <span className="text-danger">*</span>
@@ -319,11 +326,12 @@ const NuevaSolicitud = () => {
                     id="piso"
                     required
                     name="piso"
-                    placeholder="Nombre"
+                    placeholder="Ingrese número de piso"
                     value={datosSolicitante.piso}
                     onChange={datosSolicitanteChange}
                   />
                 </div>
+                {/* Teléfono */}
                 <div className="col-sm-4">
                   <label htmlFor="piso" className="form-label">
                     Teléfono <span className="text-danger">*</span>
@@ -335,11 +343,12 @@ const NuevaSolicitud = () => {
                     required
                     name="telefono"
                     placeholder="Teléfono"
-                    value={datosSolicitante.piso}
+                    value={datosSolicitante.telefono}
                     onChange={datosSolicitanteChange}
                   />
                 </div>
-                <div className="col-sm-4">
+                {/* Espacio */}
+                <div className="col-sm-4 mt-3">
                   <label htmlFor="espacio" className="form-label">
                     Espacio
                   </label>
@@ -348,14 +357,12 @@ const NuevaSolicitud = () => {
                     className="form-control mb-1"
                     id="espacio"
                     name="espacio"
-                    placeholder="Nombre"
+                    placeholder="Ingrese nombre del espacio"
                     value={datosSolicitante.espacio}
                     onChange={datosSolicitanteChange}
                   />
                 </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col-sm-4">
+                <div className="col-sm-4 mt-3">
                   <label htmlFor="sedeAlterna" className="form-label">
                     Sede alterna
                   </label>
@@ -382,23 +389,27 @@ const NuevaSolicitud = () => {
                     onChange={datosSolicitanteChange}
                   />
                 </div>
-                {datosSolicitante.otroServicio === "otroServicio" && (
-                  <div className="col-sm-4">
-                    <label htmlFor="cualServicio" className="form-label">
-                      Cual?
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control mb-1"
-                      id="cualServicio"
-                      name="cualServicio"
-                      placeholder="CualServicio?"
-                      value={datosSolicitante.cualServicio}
-                      onChange={datosSolicitanteChange}
-                    />
-                  </div>
-                )}
+                {/*Input de Ingresar otro motivo de servicio*/}
+                <div className="row mt-3">
+                  {datosSolicitante.otroServicio === "otroServicio" && (
+                    <div className="col-sm-4">
+                      <label htmlFor="cualServicio" className="form-label">
+                        Cual?
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control mb-1"
+                        id="cualServicio"
+                        name="cualServicio"
+                        placeholder="Cual Servicio?"
+                        value={datosSolicitante.cualServicio}
+                        onChange={datosSolicitanteChange}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
+              {/* Servicios solicitados */}
               <div className="alert alert-dark mt-3" role="alert">
                 Servicio Solicitado
               </div>
@@ -459,6 +470,7 @@ const NuevaSolicitud = () => {
                   </div>
                 </div>
               </div>
+              {/* Segunda fila de servicios */}
               <div className="row">
                 <div className="col">
                   <div className="form-check__servicio">
@@ -515,6 +527,7 @@ const NuevaSolicitud = () => {
                   </div>
                 </div>
               </div>
+              {/* Tercera fila de servicios */}
               <div className="row">
                 <div className="col">
                   <div className="form-check__servicio">
@@ -571,6 +584,7 @@ const NuevaSolicitud = () => {
                   </div>
                 </div>
               </div>
+              {/* Cuarta fila de servicios */}
               <div className="row">
                 <div className="col">
                   <div className="form-check__servicio">
@@ -633,6 +647,7 @@ const NuevaSolicitud = () => {
                   </div>
                 )}
               </div>
+              {/* Descripción del problema */}
               <div className="alert alert-dark mt-3" role="alert">
                 Descripción del servicio y motivos para la reparación
               </div>
@@ -682,18 +697,21 @@ const NuevaSolicitud = () => {
                         });
 
                         // Buscar coincidencia exacta por nombre
-                        const articulo = articulosDB.find((a) =>{
-                          const nombre = a.nombreArticulo.toLocaleLowerCase().trim();
-                          const descripcion = a.descripcion?.toLocaleLowerCase().trim() || "";
-                          const nombreCompleto = `${nombre} ${descripcion}`.trim();
+                        const articulo = articulosDB.find((a) => {
+                          const nombre = a.nombreArticulo
+                            .toLocaleLowerCase()
+                            .trim();
+                          const descripcion =
+                            a.descripcion?.toLocaleLowerCase().trim() || "";
+                          const nombreCompleto =
+                            `${nombre} ${descripcion}`.trim();
 
                           return (
                             nombre === texto ||
                             descripcion === texto ||
                             nombreCompleto === texto
                           );
-                        }
-                        );
+                        });
                         console.log("Articulo buscado:", articulo);
                         if (articulo) {
                           setDatosMateriales((prev) => ({
@@ -714,7 +732,11 @@ const NuevaSolicitud = () => {
                         descripcion: articulo.descripcion,
                       }))}
                       isSearchable={true}
-                      formatOptionLabel={(option: any) => (
+                      formatOptionLabel={(option: {
+                        value: string;
+                        label: string;
+                        descripcion?: string;
+                      }) => (
                         <div>
                           <div style={{ fontWeight: "bold" }}>
                             {option.label}
