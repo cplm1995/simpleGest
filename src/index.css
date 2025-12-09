@@ -315,20 +315,3 @@ b:hover{
   color: rgb(255, 0, 0);
 }
 
-/*Barra de busqueda nueva solicitud*/
-/* Ocultar completamente la barra de búsqueda del Select */
-/*  .selectMaterial__input-container {
-    height: 0 !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }*/
-
-  /* Ocultar el input real pero permitir escribir */
- /* .selectMaterial__input {
-    opacity: 0 !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }*/
