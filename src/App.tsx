@@ -1,4 +1,3 @@
-import './App.css'
 import Routers from './routers/Routers'
 
 
