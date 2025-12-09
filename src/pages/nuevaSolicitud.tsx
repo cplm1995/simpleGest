@@ -327,7 +327,7 @@ const NuevaSolicitud = () => {
                   />
                 </div>
                 <div className="col-sm-4">
-                  <label htmlFor="piso" className="form-label">
+                  <label htmlFor="telefono" className="form-label">
                     Teléfono <span className="text-danger">*</span>
                   </label>
                   <input
