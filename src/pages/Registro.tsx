@@ -4,6 +4,8 @@ import { FaRegFloppyDisk, FaXmark } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { apiFetch } from "../utils/apiFetch";
+import { io } from "socket.io-client";
+
 
 interface Articulo {
   _id?: string; // importante para editar/eliminar
@@ -14,6 +16,11 @@ interface Articulo {
   descripcion: string;
   stock: number;
 }
+
+const socket = io("http://localhost:5000",{
+  withCredentials: true,
+});
+
 
 const Registro = () => {
   const [tipoRegistro, setTipoRegistro] = useState("");
@@ -62,6 +69,16 @@ const Registro = () => {
       }
     };
     fetchArticulos();
+
+    // EVENTO: stock actualizado
+    socket.on("articulo-nuevo", (nuevoArticulo) => {
+      setArticulos((prev) => [...prev, nuevoArticulo]);
+    });
+
+    return () => {
+      socket.off("articulo-nuevo");
+    };
+
   }, []);
 
   const [datosRegistro, setDatosRegistro] = useState({
