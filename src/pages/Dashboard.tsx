@@ -7,6 +7,7 @@ import {
   FaRotate,
 } from "react-icons/fa6";
 import { apiFetch } from "../utils/apiFetch";
+import { socket } from "../socket";
 
 interface Articulo {
   _id: string;
@@ -65,6 +66,40 @@ const Dashboard = () => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+
+    // EVENTO: stock actualizado
+    socket.on("stock-actualizado", (data) => {
+      console.log("STOCK ACTUALIZADO:", data);
+
+      // Volver a cargar artículos y resumen
+      fetchArticulos();
+      fetchResumen();
+    });
+
+    // EVENTO: stock bajo
+    socket.on("stock-bajo", (data) => {
+      console.warn("⚠️ STOCK BAJO:", data);
+
+      // actualizar artículos
+      fetchArticulos();
+
+      // Puedes agregar un alert o toast
+      alert(` Stock bajo: ${data.nombre} (${data.stock} unidades)`);
+    });
+
+    //  EVENTO: nueva solicitud
+    socket.on("nueva-solicitud", (data) => {
+      console.log(" Nueva solicitud:", data);
+
+      // refrescar resumen y solicitudes
+      fetchResumen();
+    });
+
+    return () => {
+      socket.off("stock-actualizado");
+      socket.off("stock-bajo");
+      socket.off("nueva-solicitud");
+    };
   }, [fetchResumen, fetchArticulos]);
 
   return (
@@ -72,7 +107,7 @@ const Dashboard = () => {
       <div className="container-sm mt-1 dashboard-background">
         {/*Bienvenida al usuario logeado */}
         {user && (
-          <div className="alert alert-primary mb-5 text-center" role="alert" >
+          <div className="alert alert-primary mb-5 text-center" role="alert">
             Bienvenido<b style={{ marginLeft: 10 }}>{user.nombrecompleto}</b>
           </div>
         )}
