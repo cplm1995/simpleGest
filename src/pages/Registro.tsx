@@ -17,7 +17,7 @@ interface Articulo {
   stock: number;
 }
 
-const socket = io("http://localhost:5000",{
+const socket = io("https://backendsimplegest.onrender.com",{
   withCredentials: true,
 });
 
