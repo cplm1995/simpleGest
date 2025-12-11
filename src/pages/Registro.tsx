@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { apiFetch } from "../utils/apiFetch";
 import { io } from "socket.io-client";
 
-
 interface Articulo {
   _id?: string; // importante para editar/eliminar
   [x: string]: Key | null | undefined;
@@ -17,10 +16,9 @@ interface Articulo {
   stock: number;
 }
 
-const socket = io("https://backendsimplegest.onrender.com",{
+const socket = io("https://backendsimplegest.onrender.com", {
   withCredentials: true,
 });
-
 
 const Registro = () => {
   const [tipoRegistro, setTipoRegistro] = useState("");
@@ -80,12 +78,10 @@ const Registro = () => {
       setArticulos((prev) => prev.filter((a) => a._id !== id));
     });
 
-
     return () => {
       socket.off("articulo-nuevo");
       socket.off("articulo-eliminado");
     };
-
   }, []);
 
   const [datosRegistro, setDatosRegistro] = useState({
@@ -160,11 +156,12 @@ const Registro = () => {
             className="btn btn-sm btn-danger me-2"
             onClick={async () => {
               try {
-
                 toast.dismiss(); // cerrar confirmación
-                toast.warning("Artículo eliminado correctamente");
+                await apiFetch(`/api/articulos/${id}`, {
+                  method: "DELETE",
+                });
 
-                setArticulos((prev) => prev.filter((a) => a._id !== id));
+                toast.warning("Artículo eliminado correctamente");
               } catch (error) {
                 console.error(error);
                 toast.error("Error al eliminar artículo");
@@ -230,7 +227,9 @@ const Registro = () => {
                     }}
                     required
                   >
-                    <option value="" disabled>[Seleccione]</option>
+                    <option value="" disabled>
+                      [Seleccione]
+                    </option>
                     <option value="Material">Material</option>
                     <option value="Herramienta">Herramienta</option>
                   </select>
