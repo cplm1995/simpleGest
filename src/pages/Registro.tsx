@@ -82,10 +82,17 @@ const Registro = () => {
       setArticulos((prev) => prev.filter((a) => a._id !== idEliminado));
     });
 
+    // 🔥 **PING PARA MANTENER VIVA LA CONEXIÓN**
+    const intervalId = setInterval(() => {
+      console.log("Enviando ping...");
+      socket.emit("ping-keepalive", { from: "frontend" });
+    }, 20000); // cada 20 segundos
+
     return () => {
       socket.off("articulo-nuevo");
       socket.off("articulo-eliminado");
       socket.off("ping-test");
+      clearInterval(intervalId);
     };
   }, []);
 
