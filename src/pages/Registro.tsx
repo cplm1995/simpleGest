@@ -74,8 +74,8 @@ const Registro = () => {
     });
 
     //Evento articulo eliminado
-    socket.on("articulo-eliminado", (id) => {
-      setArticulos((prev) => prev.filter((a) => a._id !== id));
+    socket.on("articulo-eliminado", (idEliminado) => {
+      setArticulos((prev) => prev.filter((a) => a._id !== idEliminado));
     });
 
     return () => {
