@@ -89,7 +89,7 @@ const Dashboard = () => {
 
     // EVENTO: stock bajo
     socket.on("stock-bajo", (data) => {
-      console.warn("⚠️ STOCK BAJO:", data);
+      console.warn("STOCK BAJO:", data);
 
       // actualizar artículos
       fetchArticulos();
@@ -105,6 +105,13 @@ const Dashboard = () => {
       // refrescar resumen y solicitudes
       fetchResumen();
     });
+
+    //EVENTO: Eliminar articulo
+    socket.on("articulo-eliminado", (idEliminado) => {
+      console.log("Eliminado:", idEliminado);
+      fetchArticulos();
+    });
+
 
     return () => {
       socket.off("articulo-nuevo");
