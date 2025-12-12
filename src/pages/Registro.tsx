@@ -73,7 +73,7 @@ const Registro = () => {
     });
 
     // EVENTO: stock actualizado
-    socket.on("articulo-nuevo", (nuevoArticulo) => {
+    socket.on("nuevo-articulo", (nuevoArticulo) => {
       setArticulos((prev) => [...prev, nuevoArticulo]);
     });
 
@@ -89,7 +89,7 @@ const Registro = () => {
     }, 20000); // cada 20 segundos
 
     return () => {
-      socket.off("articulo-nuevo");
+      socket.off("nuevo-articulo");
       socket.off("articulo-eliminado");
       socket.off("ping-test");
       clearInterval(intervalId);
