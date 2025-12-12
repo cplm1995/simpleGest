@@ -68,6 +68,10 @@ const Registro = () => {
     };
     fetchArticulos();
 
+    socket.on("ping-test", (data) => {
+      console.log("Ping recibido en Registro:", data);
+    });
+
     // EVENTO: stock actualizado
     socket.on("articulo-nuevo", (nuevoArticulo) => {
       setArticulos((prev) => [...prev, nuevoArticulo]);
@@ -81,6 +85,7 @@ const Registro = () => {
     return () => {
       socket.off("articulo-nuevo");
       socket.off("articulo-eliminado");
+      socket.off("ping-test");
     };
   }, []);
 
