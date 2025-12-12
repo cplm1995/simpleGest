@@ -67,6 +67,17 @@ const Dashboard = () => {
       setUser(JSON.parse(storedUser));
     }
 
+    // Evento: artículo nuevo
+    socket.on("articulo-nuevo", (nuevoArticulo) => {
+      console.log("Nuevo artículo recibido en dashboard:", nuevoArticulo);
+
+      // Actualizar resumen
+      fetchResumen();
+
+      // Actualizar lista de artículos con stock bajo
+      fetchArticulos();
+    });
+
     // EVENTO: stock actualizado
     socket.on("stock-actualizado", (data) => {
       console.log("STOCK ACTUALIZADO:", data);
@@ -96,6 +107,7 @@ const Dashboard = () => {
     });
 
     return () => {
+      socket.off("articulo-nuevo");
       socket.off("stock-actualizado");
       socket.off("stock-bajo");
       socket.off("nueva-solicitud");
